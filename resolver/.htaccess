@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{QUERY_STRING} val
+RewriteRule ^(.*)$ ./index.php?path=$1&val

@@ -1,0 +1,122 @@
+{
+	"fix": "eliFix.php",
+	"patterns": [
+		{
+			"name": "EU Everything about a law",
+			"value": "http://data.europa.{country:eu}/eli/{typedoc:dir}/{year:$d4}/{natural_number}/all"
+		},
+		{
+			"name": "EU abstract act",
+			"value": "http://data.europa.{country:eu}/eli/{typedoc:dir}/{year:$d4}/{natural_number}{subelement:$subEU}(/{lang:$w3}(/{format:$w+})?)?"
+		},
+		{
+			"name": "EU base act",
+			"value": "http://data.europa.{country:eu}/eli/{typedoc:dir}/{year:$d4}/{natural_number}{subelement:$subEU}/{origin:oj}(/{lang:$w3}(/{format:$w+})?)?"
+		},
+		{
+			"name": "EU consolidation",
+			"value": "http://data.europa.{country:eu}/eli/{typedoc:dir}/{year:$d4}/{natural_number}{subelement:$subEU}/{pointintime:$date}(/{lang:$w3}(/{format:$w+})?)?"
+		},
+		{
+			"name": "EU corrigendum",
+			"value": "http://data.europa.{country:eu}/eli/{typedoc:dir}/{year:$d4}/{natural_number}/corrigendum/{pub_date:$date}/{origin:oj}(/{lang:$w3}(/{format:$w+})?)?"
+		},
+		{
+			"name": "FR ELI for acts and rectificatifs (NOR identifier)",
+			"value": "http://www.legifrance.gouv.{country:fr}/eli/{typedoc:$w+}/{year:$d4}/{month:$d1or2}/{day:$d1or2}/{natural_identifier:$w12}(/{origin:$w2}(/{subelement}(/{pointintime:$d8})?(/{lang:$w2})?(/{format:$w+})?)?)?"
+		},
+		{
+			"name": "FR ELI for acts and rectificatifs (Number of Law)",
+			"value": "http://www.legifrance.gouv.{country:fr}/eli/{typedoc:$w+}/{year:$d4}/{month:$d1or2}/{day:$d1or2}/{natural_identifier:$d44}({rectificatif:$Rd})?(/{origin:$w2}(/{subelement}(/{pointintime:$d8})?(/{lang:$w2})?(/{format:$w+})?)?)?"
+		},
+		{
+			"name": "FR ELI for Table of Content",
+			"value": "http://www.legifrance.gouv.{country:fr}/eli/{typedoc:$w+}/{year:$d4}/{month:$d1or2}/{day:$d1or2}(/{lang:$w2})?(/{format:$w+})?"
+		},
+		{
+			"name": "IE ELI for constitution",
+			"value": "http://www.irishstatutebook.{country:ie}/eli/{type:cons}(/{level1:$subIE})?(/{pointInTime:$date})?/{language:$w2}(/{format:$w+})?"
+		},
+		{
+			"name": "IE ELI for acts",
+			"value": "http://www.irishstatutebook.{country:ie}/eli/{year:$d4}/{type:$w+}/{natural_identifier}(/{level1:$subIE})?/{version:$w+}(/{pointInTime:$date})?/{language:$w2}(/{format:$w+})?"
+		},
+		{
+			"name": "IT ELI for acts",
+			"value": "http://www.gazzettaufficiale.{country:it}/eli/id/{year:$d4}/{month:$d2}/{day:$d2}/{codiceRedazionale}(/{tipoSerie})?"
+		},
+		{
+			"name": "IE ELI for acts",
+			"value": "http://www.gazzettaufficiale.{country:it}/eli/{typedoc:$w+}/{year:$d4}/{natural_number}(/{art:$d+})?"
+		}
+	],
+	"map": {
+		"schema": "akn",
+		"jurisdiction-0": ">country",
+		"worktype": [
+			"getDoc",
+			">typedoc"
+		],
+		"worksubtype-0": ">typedoc",
+		"workactor": null,
+		"workDate-string": ">date",
+		"workNumber-dash": ">number",
+		"lang-lang3": ">lang",
+		"versDate-string": ">pointintime",
+		"versString": ">versionString",
+		"exprSource": ">versionAuthor",
+		"format-prefix": ">format",
+		"component": null,
+		"fragment": ">subelement"
+	}, 
+	"doctypes" : {
+		"dir": "act",
+		"corrigendum": "doc",
+		"loi": "act",
+		"act": "act",
+		"prv": "act",
+		"ca": "act",
+		"si": "act",
+		"sro": "act",
+		"cons": "act",
+		"DECRETO": "act"
+	},
+	"localMaps": {
+		"http://www.irishstatutebook.ie/": {
+			"category":		{"property":"type", "map": {
+								"constitution": ["ca", "cons"],
+								"enacted legislation": ["act","prv"],
+								"secondary legislation": ["si", "sro"]
+								} 
+							},								
+			"country":		{"default": "ie"},
+			"docname":		{"property": "type"},
+			"date": 		{"property": "year"},
+			"number": 		{"property": "natural_identifier"},
+			"language": 	{"property": "language", "default":"und", "frbr":"expression"},
+			"versionDate": 	{"property": "pointInTime", "frbr":"expression"},
+			"versionString":{"property": "version", "frbr":"expression"},
+			"subelement":   {"property": "level1", "separator": "/"},
+			"format":		{"property": "format", "frbr":"manifestation"}
+		}, 
+		"/akn/": {
+			"category":		{"property":"doctype", "map": {
+								"proposed legislation": ["bill"],
+								"enacted legislation": ["act"]
+								} 
+							},								
+			"country":		{"property": "jurisdiction"},
+			"docname":		{"property": "docsubtype"},
+			"date": 		{"property": "workDate"},
+			"number": 		{"property": "workNumber"},
+			"language": 	{"property": "lang", "default":"und", "frbr":"expression"},
+			"versionDate": 	{"property": "versDate", "frbr":"expression"},
+			"versionString":{"property": "versString", "frbr":"expression"},
+			"versionAuthor": {"property": "exprSource", "frbr":"expression"},
+			"subelements":  {"property": "fragment", "separator": "-"},
+			"format":		{"property": "format", "frbr":"manifestation"}
+		}
+		
+		
+	}
+}

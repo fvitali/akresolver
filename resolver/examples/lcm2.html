@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<!--
+ELI 2 AKN converter - examples 
+by Fabio Vitali
+This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0/).
+You are free to:
+* Share - copy and redistribute the material in any medium or format
+* Adapt - remix, transform, and build upon the material
+for any purpose, even commercially.
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+Under the following terms:
+* Attribution - You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+-->
+<html>
+	<head>
+		<title>LegalCiteM Playground</title>
+		<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/readable/bootstrap.min.css" rel="stylesheet">
+		<link href="base.css" rel="stylesheet">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"> </script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+		<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"> </script>
+		<script> 
+			// straighten column sizes
+			$(document).ready(function() {
+				$('.right').height($(document).height() - (30 +  $('.navbar').height() + $('.footer').height()))
+				$('.left').height($(document).height() - (30 + $('.navbar').height() + $('.footer').height()))
+			});
+
+			// convert examples so as to be clickable
+			$(document).ready(function() {
+				$('.item').each(function(i,el) {
+					var uri = el.textContent ;
+					$(el).html('<span class="example">'+uri+'<span>  <a target="AKNconvert" title="open this URI in a new window" href="../util/eli2akn.php?eli='+uri+'&as=xml&debug" class="glyphicon glyphicon-new-window" aria-hidden="true"></span>')
+				}) ;
+			});
+
+			// capture enter keypress
+			$(document).unbind("keyup").keyup(function(e){ 
+				var code = e.which; // recommended to use e.which, it's normalized across browsers
+				if(code==13) {
+					$("#start").click();
+				}
+			});
+			
+			// handle click on examples
+			$(document).on('click','.example',function(){
+				$('#input').val(this.textContent.trim())
+				convert(this.textContent.trim()); 
+			});
+			
+			// handle click on "Convert2 button
+			$(document).on('click','#start',function(){
+				convert($('#input').val().trim() ); 
+			});
+		</script>
+		<script>
+			function out(where,what,error) {
+				$(where).html("") ;
+				if (what) {
+					if (jQuery.type( what ) === "string")
+						$(where).html(what);
+					else
+						$(where).html(JSON.stringify(what,null,2)) ;					
+					return ;
+				} else if (error) {
+					$(where).html(error);
+					return ;
+				}
+			}
+			function convert(uri) {
+				if (uri) {
+					var service = "../util/uri2lcm.php" ;
+					var data = {
+						debug: true, 
+						timestamp: 1*new Date(),
+						uri: uri
+					}
+					$.ajax({
+						method: 'GET',
+						data: data,
+						url: service,
+						success: function(d) {
+							out( '#lcm',  d.lcm, d.error || "error unknown"); 
+							out( '#akn',  d.akn); 
+							out( '#eli',  d.eli); 
+							out( '#ecli1',d.ecli1); 
+							out( '#ecli2',d.ecli2); 
+							out( '#urn',  d.urn); 
+						},
+						error: function(a,b,c) {
+							out( '#lcm',  null, a.responseText) ;
+							out( '#akn',  null); 
+							out( '#eli',  null); 
+							out( '#ecli1',null); 
+							out( '#ecli2',null); 
+							out( '#urn',  null); 
+						}
+					})
+				} else {
+					out( '#lcm',  null) ;
+					out( '#akn',  null); 
+					out( '#eli',  null); 
+					out( '#ecli1',null); 
+					out( '#ecli2',null); 
+					out( '#urn',  null); 
+				}				
+			}
+		</script>
+		<style type="text/css">
+		
+			h5 {
+				font-style: italic;
+			}
+			.example {
+				cursor: pointer; 
+				cursor: hand;
+				text-decoration: underline; 
+				color: blue; 
+			}
+
+			#start {
+				margin-top: 5px; 
+			}			
+			li {
+				font-size: 110% ; 
+			}
+			
+			.incorrect {
+				font-size: 90%; 
+				color: red; 
+			}
+			.correction {
+				font-size: 90%; 
+				color: green; 
+			}
+			
+			#patternList li {
+				font-size : 85%;
+overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  			}
+		</style>
+	</head>
+<body>
+		<div class="wrap">
+			<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" 
+								data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">LegalCiteM Playground</a>
+					</div>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+						<li><a href="#" role="button" data-toggle="modal" data-target="#about">About</a></li>
+						<li><a href="#" role="button" data-toggle="modal" data-target="#help">Help</a></li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+
+			<div class="container body">
+				<div class="row clearfix">
+					<div class="col-md-7 left">
+						<div class="panel-group spaceOver" id="leftAccordion">
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-Intro">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+Converting legal URIs using LegalCiteM
+							  </h4>
+							</div>
+							<div id="collapsePrefixes">
+							  <div class="panel-body">
+<p>This small interface converts URIs in AKN, ELI, ECLI, or URN:LEX syntax into the other syntaxes</p> 		
+<p><textarea id="input" autofocus cols="70" rows="2" style="max-height:50px;min-height:50px; resize: none"
+	placeholder="type in a URI in AKN, ELI, ECLI or URN:LEX"
+>http://data.europa.eu/eli/dir/2000/31</textarea>
+<button id="start" type="button">Convert</button></p>
+							  </div>
+							</div>
+						  </div>
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-AKNexamples">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-AKNexamples">
+								  Examples in Akoma Ntoso Naming Convention
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-AKNexamples" class="panel-collapse collapse">
+							  <div class="panel-body">
+<ul>
+	<li><span class="item">/akn/it/act/2013/123</span></li>
+</ul>
+							  </div>
+							</div>
+						  </div>
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-ELIexamples">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-EUexamples">
+								  Examples in ELI syntax
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-EUexamples" class="panel-collapse collapse">
+							  <div class="panel-body">
+<ul>
+	<li><span class="item">http://data.europa.eu/eli/dir/2011/83</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2000/31/oj</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2011/83/oj</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21/oj</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/1980/181/2009-05-27</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/1980/181/2000-01-01</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/3/corrigendum/2009-10-24/oj</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/1989/617/corrigendum/2007-08-23/oj</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2000/31/oj/fra</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21/2014-01-01/fra</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/1999/103/corrigendum/2000-04-29/oj/eng</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2000/31/oj/fra/pdf</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21/2014-01-01/fra/xhtml</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/1999/103/corrigendum/2000-04-29/oj/eng/html</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21/art_3/par_1</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21/art_3/par_1/oj</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/21/art_3/par_1/2015-04-01 </span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/2009/3/all</span></li>
+	<li><span class="item">http://data.europa.eu/eli/dir/1980/181/all</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/texte</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/article_1</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/texte/fr </span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/article_1/fr</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/texte/fr/html</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/article_1/fr/html</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/texte/fr/pdf</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/texte/fr/rtf</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969L/jo/texte/fr/rdf</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/2014-1655/jo/texte</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969Z/jo/texte</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/2014-1655R1/jo/texte</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/loi/2014/12/29/FCPX1425969Z/jo/texte/fr/html</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/jo/2015/1/21</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/jo/2015/1/21/fr</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/jo/2015/1/21/fr/html</span></li>
+	<li><span class="item">http://www.legifrance.gouv.fr/eli/jo/2015/1/21/fr/pdf</span></li>
+</ul>
+							  </div>
+							</div>
+						  </div>
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-ECLIexamples">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-ECLIexamples">
+									Examples in ECLI syntax 
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-ECLIexamples" class="panel-collapse collapse">
+							  <div class="panel-body">
+<ul>
+	<li><span class="item">ECLI:EU:C:2014:317 </span></li>
+	<li><span class="item">ECLI:EU:C:2014:317(:ACA:ESP:V1) </span></li>
+	<li><span class="item">ECLI:EU:C:2014:317(:ESP)</span></li>
+	<li><span class="item">ECLI:EU:C:2014:317(:PDF)</span></li>
+	<li><span class="item">ECLI:IT:CASS:2017:9678PEN(:PDF)</span></li>
+	<li><span class="item">ECLI:DE:BVerfG:2009:es20090630.2bve000208(:ENG)(:HTML)</span></li>
+	<li><span class="item">ECLI:EU:C:2014:317(:ACA:ESP:V1)#part2-para3</span></li>
+	<li><span class="item">ECLI:NL:RBDHA:2015:14337(:SPR:ENG:V1)</span></li>
+</ul>
+							  </div>
+							</div>
+						  </div>
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-URNexamples">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-IEexamples">
+									Examples in URN:LEX syntax  
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-IEexamples" class="panel-collapse collapse">
+							  <div class="panel-body">
+<ul>
+</ul>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+					<div class="col-md-5 right">
+						<div class="panel-group spaceOver" id="rightAccordion">
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-LCM">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#rightAccordion" href="#collapse-lcm">
+								 LegalCiteM feature list
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-lcm" class="panel-collapse collapse in">
+							  <div class="panel-body">
+								<pre id="lcm"></pre>
+							  </div>
+							</div>
+						  </div>
+<!-- collapse here -->		<div class="panel panel-default" id="Panel-Out">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#rightAccordion" href="#collapse-uris">
+								  Converted URIs
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-uris" class="panel-collapse collapse">
+							  <div class="panel-body">
+							  	<p>Akoma Ntoso Naming Convention</p>
+								<pre id="akn">/akn</pre>
+							  	<p>European Legal Identifier (ELI)</p>
+								<pre id="eli">/eli/</pre>
+							  	<p>European Case Law Identifier (ECLI)</p>
+								<pre id="ecli1">ECLI:</pre>
+								<pre id="ecli2">/ecli/</pre>
+							  	<p>URN:LEX</p>
+								<pre id="urn">URN:</pre>
+							  </div>
+							</div>
+						 </div>
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div id="push"></div>
+		</div>
+		<div class="footer">
+			<div class="container">
+				<p class="muted credit">
+					&copy; 2017 Fabio Vitali, University of Bologna &middot;
+				</p>
+			</div>
+		</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="About the LegalCiteM Playground" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">About the LegalCiteM Playground</h4>
+		</div>
+		<div class="modal-body">
+<p>Some info about the LegalCiteM Playground</p>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+<div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="Help" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">Help</h4>
+		</div>
+		<div class="modal-body">
+HELP!!!
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+
+
+
+</body>
+</html>

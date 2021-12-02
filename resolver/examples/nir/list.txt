@@ -1,0 +1,8 @@
+urn:nir:ministero.giustizia:decreto.legge:2000-07-09;123
+urn:nir:ministero.giustizia;dipartimento.esteri;dirigente+ministero.finanze;responsabile:disegno.legge:2000-07-09;123
+urn:nir:stato:legge:2000-04-03;56*errata.corrige;2000-09-10$pdf;1.7:senato.repubblica:tabella.1
+urn:nir:stato:legge:2000-04-03;56*avviso.rettifica;2003-06-05*errata.corrige;2003-06-07$pdf;1.7:istituto.poligrafico.zecca.stato;guritel
+urn:nir:stato:legge:2000-04-03;56$xml;nir-2.2:senato.repubblica
+urn:nir:stato:legge:2000-04-03;56$pdf;1.7:senato.repubblica:tabella.1~art1!eff=2005-02-01
+urn:nir:stato:legge:2000-07-09;123~art2-com3!vig=2003-01-01
+

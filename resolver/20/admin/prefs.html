@@ -1,0 +1,117 @@
+<div>
+<form role="form" class="form-horizontal"                                                      ng-controller="prefsController">
+  <div>
+  	These preferences will be used for features that are not specified in the request URI. 
+  	More details can be found in the <a href="help.html">documentation</a>. 
+  	Cookie is <?PHP echo $_COOKIE['AKRprova'] ?>
+  </div>
+  <div class="input-group">
+    <label for="uses">Default use</label>
+	<select class="form-control" id="uses" ng-model='p.use' ng-options='u.use as u.use for u in uses' > </select>
+	<div class='block-help'>{{uses.indexBy(p.use,'use')[0].info}}</div>
+  </div>
+	<div class="input-group">
+	    <label for="viewdate">View date</label>
+	    <div class="col col-md-6">
+            <p class="input-group">
+			    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="p.showDate" is-open="open1" show-weeks='false' ng-required="true" close-text="Close" />
+	            <span class="input-group-btn">
+					<button class="btn btn-default" ng-click="open($event,1)"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</p>
+		</div>
+	    <div class="col col-md-6">
+            <p class="input-group">
+			    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="p.endShowDate" is-open="open2" show-weeks='false' ng-required="true" close-text="Close" />
+				<span class="input-group-btn inline">
+					<button class="btn btn-default" ng-click="open($event,2)"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</p>
+		</div>
+		<div class='block-help' ng-if="!p.endShowDate">All documents will be shown in the version closest to {{p.showDate  |date:format}} 
+		{{(p.showDate.toDateString()===today.toDateString() ?'(today)':'')}}, provided that multiple versions are available.</div>
+		<div class='block-help' ng-if="p.endShowDate">All documents will be selected in all versions in force between {{p.showDate  |date:format}} 
+		{{(p.showDate.toDateString()===today.toDateString() ?'(today)':'')}} and {{p.endShowDate  |date:format}} 
+		{{(p.endShowDate.toDateString()===today.toDateString() ?'(today)':'')}}, provided that multiple versions are available.</div>
+	</div>
+  <div class="input-group">
+    <label for="lang">Preferred Language</label>
+	<select class="form-control" id="lang" ng-model='p.lang3'
+		ng-options='l.lang3 as l.lang3+" - "+l.eng+(l.native?" ("+l.native+")":"") for l in languages.indexBy(true,"skip",true)' ></select>
+	<div class='block-help' ng-switch on="p.lang3">
+		<div ng-switch-when="non">All documents will be shown in their original language.</div>
+		<div ng-switch-when="mul">All documents will be shown in multiple languages.</div>
+		<div ng-switch-when="brw">All documents will be shown in the language set by the browser's preferences.</div>
+		<div ng-switch-default>All documents will be shown in {{languages.indexBy(p.lang3,'lang3')[0].eng}}, if a translation is available.</div>
+	</div>
+	<div class="input-group">
+	    <label for="lang">Preferred format</label>
+		<select class="form-control" id="format" ng-model='p.format'>
+			<option value=''>No prefs</option>
+			<option value='xml'>XML</option>
+			<option value='pdf'>PDF</option>
+			<option value='html'>HTML</option>
+		</select>
+		<div class='block-help' ng-if="p.format">All documents will be shown in {{p.format | uppercase}}, if available.</div>
+		<div class='block-help' ng-if="!p.format">All documents will be shown in any available format.</div>
+	</div>
+	<div class="text-right input-group">
+		<button type="button" class="btn spaced" ng-click="reset()">Cancel</button>
+		<button type="button" class="btn btn-primary spaced" ng-click="save()">Save preferences</button>
+	</div>
+</form>
+<script>
+	var theUses = [
+		{ use: 'resolve', info: 'Parses the URI of the request into features and returns a JSON structure.'}, 
+		{ use: 'redirect', info: 'Redirects the browser to the requested document as if its physical URL has been used.'}, 
+		{ use: 'dereference', info: 'Shows the requested document as if it resides at the URI stated.'}, 
+		{ use: 'wrap', info: 'Wraps the requested document inside an iframe adding a navigation bar.', default:true}
+	]	 
+
+	wrapApp.controller('prefsController', function($scope, $http,$filter) {
+		$scope.format = 'yyyy-MM-dd';
+		$http.get(pathBase+'/admin/data/languages.json').success(function(data) {
+			$scope.languages = data;
+		});
+		$scope.f = theFeatures
+		
+		var p = $.extend(true, {}, theFeatures.prefs) ;
+		$scope.today = new Date()
+		if (p.viewDate=='today') {
+			p.showDate=$scope.today ;
+		} else {
+			p.showDate = new Date().parse(p.viewDate,$scope.format.toUpperCase())
+		}
+		if (p.endViewDate) {
+			p.endShowDate=p.endViewDate ;
+		}
+		$scope.p = p
+		$scope.uses = theUses
+		$scope.open = function($event,n) {
+			$event.preventDefault();
+			$event.stopPropagation();
+			if (n==1) $scope.open1 = true;
+			if (n==2) $scope.open2 = true;
+		};
+		$scope.save = function() {
+			var goOn = confirm("Save preferences?")
+			if (goOn) {
+				if ($scope.p.showDate.toDateString()==$scope.today.toDateString()) {
+					p.viewDate='today' ;
+				} else {
+					p.viewDate = p.showDate.toString($scope.format.toUpperCase())
+				}
+				if (p.endShowwDate)
+					 p.endViewDate = p.endShowDate.toString($scope.format.toUpperCase())
+				
+				$.post( "/admin/savePrefs.php", $scope.p, function(data) {
+					window.location.reload(true)
+				})
+			}
+		}
+		$scope.reset = function() {
+			$scope.p = $.extend(true, {}, theFeatures.prefs) ;
+			$('#pref').modal('hide')
+		}
+	});
+</script>

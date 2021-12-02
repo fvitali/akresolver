@@ -1,0 +1,66 @@
+#toolbar {
+	z-index: 100; 
+	margin: 0 ; 
+}
+
+#iframe { overflow: hidden;} /*this is to remove the scroll when not needed*/
+
+#iframe, iframe {
+	z-index: 1 ;
+	width: 100%;
+	height: 100%;
+}
+
+.navbar-brand {
+	padding-left: 50px; 
+	background-image: url("/akn/admin/an-2.gif") ;
+	background-repeat:no-repeat;
+	background-position:left top;
+
+}
+
+
+.marginTop {
+	margin-top: 70px; 
+}
+
+.navbar-brand {
+	padding-left: 50px; 
+	background-image: url("an-2.gif") ;
+	background-repeat:no-repeat;
+	background-position:left top;
+
+}
+
+.corrextWidth {
+	width: auto%;
+}
+
+.larger {
+	font-size: 120%;
+}
+
+label {
+	display: table-row !important;
+}
+.block-help {
+	font-style: italic; 
+	font-size: 90% ;
+	display: table-row !important;
+}
+
+.smaller {
+	font-style: italic; 
+	font-size: 90% ;
+}
+
+div.input-group {	
+	margin-top: 15px; 
+	width: 100%;
+}
+
+.spaced {
+	margin: 5px; 
+}
+
+

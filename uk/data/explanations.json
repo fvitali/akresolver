@@ -1,0 +1,30 @@
+[
+	{
+		"term":"eng",
+		"explanation":"English"
+	},
+	{
+		"term":"hmso",
+		"explanation":"Her Majesty's Stationery Office "
+	},
+	{
+		"term":"en",
+		"explanation":"English"
+	},
+	{
+		"term":"asp",
+		"explanation":"Acts of the Scottish Parliament"
+	},
+	{
+		"term":"pga",
+		"explanation":"Public General Act"
+	},
+	{
+		"term":"la",
+		"explanation":"Local Act"
+	},
+	{
+		"term":"act",
+		"explanation":"Enacted legislation"
+	}
+]

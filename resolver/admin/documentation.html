@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en"                                                          ng-app="docApp">
+	<head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+			<!-- Bootstrap core CSS -->
+			<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+			<!-- Custom styles for this template -->
+	
+			<link href='documentation.css' rel="stylesheet">
+
+			<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+			<!--[if lt IE 9]>
+				<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+				<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+			<![endif]-->
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+			<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+			<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+			<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+	</head>
+	<body                                                     ng-controller="docAppCtrl">
+		<div id='top'>&nbsp;</div>
+		<div 	class="navbar navbar-default navbar-fixed-top" role="navigation" id="toolbar">
+			<div class="navbar-header">
+				<button type="button" 
+						class="navbar-toggle" 
+						data-toggle="collapse" 
+						data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<span class="navbar-brand"> Akoma Ntoso URI Resolver </span>
+			</div>
+		</div>
+		
+		<div class="container marginTop" role="main" >
+			<div class="row">
+			<div class="col-md-9">
+				<div class="jumbotron">
+					<img id='logo' src="an.gif" alt="Akoma Ntoso logo" class="pull-left" style="margin-right: 25px;"/>
+					<h1 class="nocounter">Documentation <br/>
+					<span class="small">for the Akoma Ntoso URI Resolver, version 2.0</span></h1>
+				</div>
+				<div class="row"><div class="col-md-12 content">
+				<h1 class="page-header">Introduction</h1>
+				<p>The purpose of the Akoma Ntoso URI Resolver is to provide 
+				completion, resolution and dereferencing to a legal document given its URI according to the Akoma Ntoso Naming 
+				Convention. Documents containing Akoma Ntoso URIs can use this resolver to provide hypertextual navigation between 
+				them. FRBR features are used to map abstract identifiers into lower-level identifiers and then used to find the 
+				physical URL of the most appropriate document.</p>
+
+				<p>The Akoma Ntoso URI Resolver relies on a federated architecture where the steps for the resolution are 
+				assigned to different modules according to issues related to jurisdiction, geographical location, authorship of 
+				documents and efficiency of the overall system. </p>
+
+				<p>The Akoma Ntoso URI Resolver divides the overall resolution process in four steps: </p>
+				<ol>
+					<li><b>Parse</b>: the requested URI is analyzed and structured in explicit <i>features</i> containing the 
+					information of the request in accessible form.</li>
+					<li><b>Complete</b>: URI requests will often contain insufficient features to identify clearly and unambigupusly 
+					<i>one</i> physical resource. In particular, <i>Work-level URIs</i> and <i>Expression-level URIs</i> need completion 
+					to determine the best corresponding <i>Manifestation-level URI</i>. Missing information are provided by examining the 
+					user's preferences, the browser's settings, and the server's settings.</li>
+					<li><b>Resolve</b>: one physical URL best matching the features of the request is determined (or none if the request 
+					is wrong or too vague). Optionally, additional URIs may be provided for navigation suggestions (e.g., the same document 
+					in different languages, or in different versions).</li>
+					<li><b>Perform</b>: the response is delivered to the requesting agent according to one of following four verbs: </li>
+					<ul>
+						<li><i>Redirect</i>: the requesting agent is redirected to the corresponding physical resource, similarly to any 
+						URI shortener. The browser displays the physical URL and the Akoma Ntoso URI is gone and forgotten.</li>
+						<li><i>Dereference</i>: the requested document is delivered to the requesting agent <i>as if</i> the request URI 
+						is the physical URL of the document. A complete virtualization of the namespaces of the document is therefore 
+						fully implemented. </li>
+						<li><i>Resolve</i>: the features of the requested document are provided to the requesting agent, possibly with 
+						explanations and details, as well as the physical URL of the document and all the optional suggestions of the 
+						resolution step.</li>
+						<li><i>Wrap</i>: the requested document is delivered inside a wrapping HTML document that contains services and 
+						information about the document and the resolution process.</li>
+					</ul>
+				</ol>
+
+			
+				<h1 class="page-header">Basic terminology</h1>
+				<p>In the following we provide some details about the most important concepts used in this document and by the resolver.</p>
+				<dl>
+					<dt>Akoma Ntoso</dt>
+					<dd>Akoma Ntoso is a proposed standard for the representation in XML of legal and legislative documents including 
+					enacted legislation (acts), proposed legislation (bills), parliamentary debate reports, formal amendments, judgements 
+					and other types of documents. Its characteristics are being discussed in the 
+					<a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=legaldocml">LegalDocML Technical Committee</a> of OASIS, 
+					and additional details are found <a href="http://www.akomantoso.org/">here</a>.</dd>
+					<dt>Akoma Ntoso Naming Convention</dt>
+					<dd>Within the Akoma Ntoso proposed standard, an important part is the Naming Convention, a standardized syntax for naming 
+					documents that uses IRIs and FRBR for identifying and accessing to them. Details can be found 
+					<a href="http://www.akomantoso.org/release-notes/akoma-ntoso-3.0-schema/naming-conventions-1">here</a>, but a brief summary 
+					of the Convention is found in the next section of this document. </dd>
+					<dt>Dereferencing</dt>
+					<dd><a ref="http://tools.ietf.org/html/rfc3986#section-1.2.2">Dereferencing</a> is the standard term used in IRI/URI management
+					for the operation that performs an action over a web resource, given its IRI/URI: in particular, the dereferencing returns 
+					(a copy of) a resource given its IRI/URI. Dereferencing is often distinguished from resolution, which precedes dereferencing 
+					and produces an actionable IRI/URI that the HTTP agents can work with to provide the copy of the resource.</dd>
+					<dt>FRBR</dt>
+					<dd>The <a href='http://www.ifla.org/publications/functional-requirements-for-bibliographic-records'>Functional Requirements 
+					for Bibliographic Records</a> is a conceptual model of documents used by Akoma Ntoso to distinguish different types of 
+					references to them. While a full discussion of the nuances of this model is not appropriate here, FRBR introduces four layered
+					concepts all in a way referring to documents: the Work, which is a "distinct intellectual or artistic creation", the Expression, 
+					which is "the specific intellectual or artistic form that a work takes each time it is realized.", the Manifestation, which is 
+					"the physical embodiment of an expression of a work" and the Item, which is "a single exemplar of a manifestation". The Akoma 
+					Ntoso Naming Convention provides a precise interpretation of these concepts, in that a Work-level reference is a reference to
+					the document in its essence, to any and all of its versions and variants depending on context, while a Expression-level 
+					reference is a reference to precisely one specific variant of the document; each variant is either related to a specific 
+					moment in time, for documents that change and evolve (and they are often called <i>versions</i>), or to a specific linguistic
+					expression, for documents that exist in different languages (and they are called <i>language variants</i>), or to a specific
+					selection of content, for document that are published in different levels of completion, such as verbatim, abridged, 
+					anonymized, digest, etc. (and they are often called <i>content variants</i>); a Manifestation-level reference is a reference
+					to a specific representation of a variant or version, in which it is finalized which data format (e.g. XML, HTML, or PDF), 
+					which markup, and which editorial content (e.g., commentaries) has been added. Finally, an Item-level reference is a 
+					reference to a physical copy of a Manifestation, which is by definition byte-by-byte identical to all the other Items of 
+					the same Manifestation. The resolution corresponds to the steps leading from a Work-level, Expression-level 
+					or Manifestation-level reference to the URL of any of the identical Items of such Work, Expression or Manifestation.</dd>
+					<dt>IRI</dt>
+					<dd>IRIs are Internationalized Resource Identifiers, strings formatted according to a specific syntax that are used to 
+					identify  resources on the web. they follow the syntax specified in <a href="http://tools.ietf.org/html/rfc3987">IETF RFC 
+					3987</a> and are the internationalized version of URI (Uniform resource Identifiers) which have been used in the WWW for 
+					a decade or so. In this document, we will use equivalently URIs and IRIs to refer to URIs, since the term IRIs is still 
+					relatively unknown in the legal domain. </dd>
+					<dt>Resolution</dt>
+					<dd>Resolution is the operation preceding dereferencing, and <a ref="http://tools.ietf.org/html/rfc3986#section-1.2.2">it 
+					is defined as</a> "the process of determining an access mechanism and the appropriate parameters necessary to dereference a URI; 
+					this resolution may require several iterations". From the point of view of this tool, the resolution is the operation of 
+					finding the URL of a physical resource (e.g., the Item-level URL) given the URI of a an abstract concept of document (e.g., 
+					a Manifestation-level URI). In particular, the abstract, Manifestation-level URI makes no reference to any concrete and 
+					physical infrastructure (location, software architecture, local name, etc.), while the resolved URL clearly specifies an 
+					actionable reference to a specific Internet server and a specific resource that it can return.</dd>
+					<dt>URI</dt>
+					<dd>URIs are Uniform Resource Identifiers, the ubiquitous mechanism for the web to refer to its resources, be they 
+					physical documents, server-side applications, conceptualizations of documents, or abstractions of concepts. Everything 
+					that can be identified and named on the web can be done through a URI, which is a string that is uniquely associated to 
+					the resource and is expressed according to the syntax established in <a href="http://tools.ietf.org/html/rfc3986">IETF RFC 
+					3986</a>. Akoma Ntoso URIs are, technically, IRIs, but the term URI precedes and is often used interchangeably with it 
+					for practical purposes. </dd>
+				</dl>
+
+				<h1 class="page-header">Architecture of the resolver</h1>
+				
+
+				<p>The general architecture of the Akoma Ntoso URI Resolver relies on two different types of actors, <i>performers</i> and
+				<i>resolvers</i>: </p>
+				<figure class="pull-right">
+					<img src="architecture2.png" alt="the architecture of the resolver" class="img-responsive" />
+					<figcaption>The general architecture of the Akoma Ntoso URI Resolver</figcaption>
+				</figure>
+				<ol>
+					<li>The <b>performer</b> receives the requests by means of an <b>Akoma Ntoso URI</b>.</li>
+					<li>The resolvers' <b>catalogue</b> is looked up for the most appropriate resolver.</li>
+					<li>One or more resolvers are found and readied for resolution.</li>
+					<li>The performer parses the request to create a <b>feature list</b> and queries each 
+					resolver for a best match.</li>
+					<li>The resolver uses the feature list to identify and return to the performer the <b>URL 
+					of the best matching physical 
+					resource</b>, as well as, optionally, a number of <b>additional suggestions</b> (e.g., 
+					copies in different languages or different versions). 
+					<li>The performer <b>acts on the resolved URL</b> either redirecting the user agent to 
+					the document's URL, or delivering the document itself, or wrapping the document inside a 
+					shell with additional information and tools.</li>
+				</ol>
+				
+				<p>Of course, each resolver can resolve only a subset of the URIs of legal documents, e.g., 
+				only those of a specific country or of a specific jurisdiction, but the federated architecture 
+				is guaranteed uniform access and equivalent resolution through the use of a shared catalogue 
+				of resolvers that lists all available resolvers for all covered jurisdictions. This also 
+				guarantees that all performers will resolve the URIs in the same manner and to the same URLs. </p> 
+				
+				<h2 class="page-header">Parsing the request</h2>
+				
+				<p>The first step performed by the performer is to examine the URI of the request and deliver 
+				a list of features to the actual resolver. The URI has to follow the Akoma Ntoso Naming 
+				Convention, with a few exceptions. The list of features is a JSON object with a known structure 
+				that is then sent to the resolver compacted in base64 so as to avoid representation problems. 
+
+				<h3 class="page-header">The syntax of requests</h3>
+				
+				<p>This version of the Akoma Ntoso URI Resolver fully supports the Akoma Ntoso Naming 
+				Convention relative to Akoma Ntoso version 3. It also adds support for a small number of 
+				modifications with respect to it, that are documented in this subsection. </p>
+				
+				<p>The syntax of the requests is as follows <i id="usage" class="small"></i>: </p>
+				<dl>
+					<dt>Resolver-specific fragment</dt>
+					<dd class="example">
+						<span class="syntax optional">/use</span>
+					</dd>
+					<dt>Work-level fragment</dt>
+					<dd class="example">
+						<span class="syntax">/country</span> 
+						<span class="syntax optional">-jurisdiction</span>
+						<span class="syntax">/type</span>
+						<span class="syntax optional">/subtype</span>
+						<span class="syntax optional">/creator</span>
+						<span class="syntax">/creationDate</span>
+						<span class="syntax">/number</span>
+					</dd>
+					<dt>Expression-level fragment</dt>
+					<dd class="example">
+						<span class="syntax">/language</span> 
+						<span class="syntax optional">@versionDate</span>
+						<span class="syntax optional">:viewDate</span>
+						<span class="syntax optional">/endViewDate</span>
+						<span class="syntax optional">/expressionCreator</span>
+						<span class="syntax optional">/contentDate</span>
+					</dd>
+					<dt>Manifestation-level fragment</dt>
+					<dd class="example">
+						<span class="syntax optional">/manifestationCreator</span> 
+						<span class="syntax optional">/manifestationDate</span>
+						<span class="syntax">.format</span>
+					</dd>
+				</dl>
+				<table class="tohide">
+					<caption><i>Explanation for each element of the syntax above</i></caption>
+					<tr for='use'>
+						<th>use</th><td>one of the services offered by the resolver, such as 
+						resolve, redirect, dereference and wrap. Optional. If absent, a default is used. </td>
+					</tr>
+					<tr for='country'>
+						<th>country</th><td>a ISO 3166-1 alpha-2 two-letter code for the country. Required</td> 
+					</tr>
+					<tr for='jurisdiction'>
+						<th>jurisdiction</th><td>the specification of the national, regional or local 
+						jurisdiction emanating the document. Uses an open vocabulary. Optional</td> 
+					</tr>
+					<tr for='type'>
+						<th>type</th><td>one of the principal document types in Akoma Ntoso, one of 
+						'act', 'bill', 'amendment', ecc. Required</td> 
+					</tr>
+					<tr for='subtype'>
+						<th>subtype</th><td>a subtype of the document, open vocabulary. Optional</td> 
+					</tr>
+					<tr for='creator'>
+						<th>creator</th><td>The emanating actor, required unless implicitly deducible 
+						by the document type</td> 
+					</tr>
+					<tr for='creationDate'>
+						<th>creation date</th><td>The original creation date of the work, expressed 
+						in YYYY-MM-DD format or just YYYY.</td> 
+					</tr>
+					<tr for='number'>
+						<th>number</th><td>A number or title or other disambiguating feature of the work</td> 
+					</tr>
+					<tr for='language'>
+						<th>language</th><td>The human language in which the expression is drafted. 
+						A ISO 639-2 alpha-3 three-letter code.</td> 
+					</tr>
+					<tr for='versionDate'>
+						<th>version date</th><td>The version date of the expression in syntax YYYY-MM-DD 
+						or just YYYY.</td> 
+					</tr>
+					<tr for='viewDate'>
+						<th>view date</th><td>The view date, i.e., the date relative to which the 
+						correct expression needs to be found. In syntax YYYY-MM-DD or just YYYY.</td> 
+					</tr>
+					<tr for='endViewDate'>
+						<th>end view date</th><td>If end view date is present, the view is a range of dates. 
+						In syntax YYYY-MM-DD or just YYYY.</td> 
+					</tr>
+					<tr for='expressionCreator'>
+						<th>expression creator</th><td>The creator of the expression, if different from 
+						the emanating actor</td> 
+					</tr>
+					<tr for='contentDate'>
+						<th>content date</th><td>The date in which the content of this expression was 
+						created, if different from the version date. In syntax YYYY-MM-DD or just YYYY.</td> 
+					</tr>
+					<tr for='manifestationCreator'>
+						<th>manifestation creator</th><td>The creator of the manifestation, i.e., the 
+						author of the specific markup or PDf or file being shown</td> 
+					</tr>
+					<tr for='manifestationDate'>
+						<th>manifestation date</th><td>The date in which this file was created, in 
+						syntax YYYY-MM-DD or just YYYY.</td> 
+					</tr>
+					<tr for='format'>
+						<th>format</th><td>The common extension used to indicate the data format 
+						for the manifestation, such as xml for XML, PDF for PDF, doc for MS Word, etc. </td> 
+					</tr>
+				</table>
+
+				<p>The result of the parsing is a series of 'name/value' pairs, called <i>features</i>. 
+				In addition to the features extracted from the request, the resolver adds two more features: </p>
+				<ul>
+					<li>The <i>use</i>, (i.e. whether to redirect,dereference,resolve or wrap the request URI) if 
+					no value has been set in the request</li>
+					<li>The <i>path</i>, i.e., the full request as it was provided in the URI. </li>
+				</ul>
+				
+				<h3 class="page-header">Finding the resolver</h3>
+				
+				<p>In addition to the parsing, the performer also needs to determine which resolver is best 
+				suited to provide the resolved URL. To do so, it checks on a shared soure, the <i>catalogue</i>,
+				looking for all the resolvers that claim to be able to solve the request. </p>
+				
+				<p>The current catalogue is available at <a href="http://akn.web.cs.unibo.it/resolvers/servers.json">
+				http://akn.web.cs.unibo.it/resolvers/servers.json</a>. It is a simple JSON file that contains 
+				a regular expression on the request, and the URL of the associated resolver.</p>
+				
+				<p>If more than one server matches the regular expression, the performer queries 
+				all the resolvers and returns the union of the results of all the queries. </p>
+
+				<h2 class="page-header">Completing features</h2>
+				
+				<p>Resolution is done on a full Manifestation-level URI. If the request URI is anything short of a full 
+				Manifestation-level URI, then there is missing information in the request that needs to be added before 
+				the resolution can take place. This is the <i>completion of features</i>. This is frequent when a Work-level
+				or a Manifestation-level URI is used in the query.</p>
+				
+				<p>Completion of features is therefore the determination of values for features that are <b>not</b> present in the
+				request URI but needs to be present for the resolution to take place. Usual examples of features that may be 
+				missing  from request include the <i>language</i>, the <i>view date</i> or the <i>format</i>. 
+				
+				<p>The completion of the features can be taken care of client-side, or at the performer's, or at the resolver's. 
+				In fact, every feature that is necessary to resolution is provided, in decreasing order of preference: </p>
+				
+				<ul>
+					<li><i>in the request</i>;</li>
+					<li><i>as user's preferences</i>, delivered via cookie to the performer;</li>
+					<li><i>as browser settings</i>, delivered via HTTP headers of the request (e.g., Accept-Language);</li>
+					<li><i>as resolver's defaults</i>, which provides values for missing features, or overrides featurs if 
+					the relevant choice is not available.</li> 
+				</ul>
+				
+				<p>For instance, a multilingual resolver may be able to provide a document in the language specified in the request, 
+				or by the user's preferences or by the browser settings. If no language is specified in these forms, then a default 
+				language is chosen by the resolver. Similarly, if a language is specified, for which the relevant document is not 
+				available, then again a default language is chosen. </p>
+				
+				<h2 class="page-header">Resolving features</h2>
+
+				<p>The resolution is, strictly speaking, the determination of the physical URL of the actual document best matching 
+				the full set of features determined by the request URI and the completion of features. A specific actor called 
+				<i>resolver</i> takes care of that. Once the resolver that can perform the actual resolution is identified, it is 
+				automatically contacted via HTTP by the performer and delivered the full list of features as well as the preferences 
+				set by the user and the relevant HTTP headers. Performers and resolvers are therefore completely separate and 
+				independent, and exchange data through a common request and respnse format.</p>
+				
+				<p>There are two possible ways to resolve into the physical URL:</p>
+				<ul>
+					<li>The physical URL is composed of fragments that are corresponding to or computable from values of the features. 
+					In this case, a template mechanism can be used for building the physical URL. </li> 
+					<li>The physical URL is an arbitray string not related in any way to the features. In this situation, a case by 
+					case mapping is necessary</li>
+				</ul>
+				 
+				<h3 class="page-header">Resolution: the response</h3>
+
+				<h2 class="page-header">Performing the action on URL</h2>
+				<h3 class="page-header">Resolve</h3>
+				<h3 class="page-header">Redirect</h3>
+				<h3 class="page-header">Dereference</h3>
+				<h3 class="page-header">Wrap</h3>
+				<section>
+					<h1 class="page-header">Setting up an Akoma Ntoso URI Resolver</h1>
+
+					<h2 class="page-header">Download</h2>
+				
+					<h2 class="page-header">The performer</h2>
+				
+					<h2 class="page-header">The resolver</h2>
+				
+					<h2 class="page-header">The catalogue</h2>
+
+						<p>This is the where I explain how to use it</p>
+					</section>
+				<section>
+					<h1 class="page-header">Conclusions</h1>
+						<p>This is the where I explain how to use it</p>
+				</section>
+				<section>
+				<h1 class="page-header">License</h1>
+					<p><b>Copyright &copy; 2014</b> – Copyright holders: Department of 
+					Computer Science and Engineering and CIRSFID, University of Bologna</p>
+
+					<p>Authors:</p>
+					<ul>
+					<li><b>Fabio Vitali</b>, <i class="small">Department of Computer Science and Engineering, University of Bologna</i></li>
+					<li><b>Monica Palmirani</b>, <i class="small">CIRSFID, University of Bologna</i></li>
+					<li><b>Luca Cervone</b>, <i class="small">CIRSFID, University of Bologna</i></li>
+					</ul>
+					<p class="small">Permission is hereby granted to any person obtaining a copy of this
+					software and associated documentation files (the “Software”), to deal in
+					the Software without restriction, including without limitation the
+					rights to use, copy, modify, merge, publish, distribute, sublicense,
+					and/or sell copies of the Software, and to permit persons to whom the
+					Software is furnished to do so, subject to the following conditions:</p>
+
+					<p class="small">The Software can be used by anyone for purposes without commercial
+					gain, including scientific, individual, and charity purposes. If it is
+					used for purposes having commercial gains, an agreement with the
+					copyright holders is required.</p>
+
+					<p class="small">The above copyright notice and this permission notice shall be
+					included in all copies or substantial portions of the Software.</p>
+
+					<p class="small">Except as contained in this notice, the name(s) of the above
+					copyright holders and authors shall not be used in advertising or
+					otherwise to promote the sale, use or other dealings in this Software
+					without prior written authorization. The end-user documentation included
+					with the redistribution, if any, must include the following
+					acknowledgment: “This product includes software developed by University
+					of Bologna (Department of Computer Science and Engineering and CIRSFID)
+					and its authors (Fabio Vitali, Monica Palmirani, Luca Cervone)”, in the
+					same place and form as other third-party acknowledgments. Alternatively,
+					this acknowledgment may appear in the software itself, in the same form
+					and location as other such third-party acknowledgments.</p>
+
+					<p class="small">THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+					EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+					MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+					IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+					CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+					TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+					SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+				</section>
+				</div></div>
+
+			</div>
+ 
+ 			<div class="col-md-3">
+				<div class="bs-docs-sidebar hidden-print" role="complementary">
+					<ul class="nav bs-docs-sidenav">
+<!-- <li ng-repeat='item in h' class="myAffix" ng-class='{active:$first}'><a ng-href="{{source()}}">{{item.innerHTML }}</a></li> -->
+						<li ng-repeat='item in h' class="myAffix" ng-class='liclass(item,$index)'><a ng-href="{{source()}}">{{item.innerHTML }}</a></li>
+					</ul>	
+					<a class="back-to-top" href="#top">
+					  Back to top
+					</a>
+				</div>
+			</div>
+		</div>
+		<script>
+			var docApp = angular.module('docApp', ['ui.bootstrap']);
+			docApp.controller('docAppCtrl', function($scope) {
+				$scope.h = $('.page-header') ;
+				$scope.source = function() {
+					var id = 'header-'+this.$index
+					$(this.item).attr('id',id)
+					return '#'+id
+				}
+				$scope.liclass = function(item, index) {
+					var r =  item.tagName
+					if (index==0) {
+						r += ' active'
+					}
+					return r
+				}
+				$(".bs-docs-sidebar").affix()
+				$('body').scrollspy({target:".bs-docs-sidebar", offset: 300})
+				setTimeout(function(){
+					$('body').scrollspy('refresh')
+				}, 100) ;
+				$('.syntax').each(function(index,item) {
+				  var a = $(item).text().match(/[a-zA-Z0-9]+/)[0]
+				  $(item).attr('title',$('tr[for="'+a+'"] th').text() )
+				  $(item).attr('data-content',$('tr[for="'+a+'"] td').html() )
+				})
+				$('.example span').popover({
+					html: true, 
+					trigger: 'hover'
+				})
+				$('#usage').text('(Move mouse over each element to verify its meaning. Blue text and square brackets indicate that the element is optional)') ;
+				$('.tohide').hide() ;
+			});
+		</script>
+	</body>
+</html>

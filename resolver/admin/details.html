@@ -1,0 +1,94 @@
+<div                                                                                      ng-controller='detailsController'>
+	<p>These features are used to identify the actual document provided. Some features were provided via the request URI and some were added automatically by the application</p>
+	<accordion close-others="true">
+		<accordion-group is-open="isopen1">
+			<accordion-heading>
+				Work-level features
+				<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen1, 'glyphicon-chevron-right': !isopen1}"></i>
+			</accordion-heading>	
+			<detail name="schema" label="Schema:"></detail>
+			<detail name="jurisdiction[0]" label="Country"></detail>
+			<detail name="worktype" label="Work type"></detail>
+			<detail name="worksubtype[0]" label="Subtype"></detail>
+			<detail name="workactor[0]" label="Work creator"></detail>
+			<detail name="workDate" label="Date"></detail>
+			<detail name="workNumber[0]" label="Number"></detail>
+		</accordion-group>
+		<accordion-group is-open="isopen2">
+			<accordion-heading>
+				Expression-level features
+				<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen2, 'glyphicon-chevron-right': !isopen2}"></i>
+			</accordion-heading>
+			<detail name="lang['eng']" label="Language"></detail>
+			<detail name="versDate" label="Version date"></detail>
+			<detail name="viewDate" label="View date"></detail>
+			<detail name="view['range']" label="View range"></detail>
+			<detail name="exprAuthority" label="Authority"></detail>
+			<detail name="contentDate" label="content Date"></detail>
+		</accordion-group>
+		<accordion-group is-open="isopen3">
+			<accordion-heading>
+				Manifestation-level features
+				<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen3, 'glyphicon-chevron-right': !isopen3}"></i>
+			</accordion-heading>
+			<detail name="manifSource" label="Source"></detail>
+			<detail name="manifDate" label="Date"></detail>
+			<detail name="format['mime']" label="Format"></detail>
+		</accordion-group>
+	</accordion>
+	<div class="text-right">
+		<button type="button" class="btn btn-primary" ng-click="close()">Ok</button>
+	</div>
+</div>
+<script type="text/template" id="detailItem">
+			<div class="row" ng-if="f.features.$name">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>$label:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{ value(f.features.$name) }}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{ explain("$name") }}</div>
+			</div>
+</script>
+<script>
+	var sources = {
+		"default": "Default value of the resolver" ,	
+		"user-agent": "Value as specified by the user agent (usually the browser)" ,	
+		"preferences": "Value as specified by the user's preferences" ,	
+		"request": "Value as specified in the request" ,	
+		"forced" : "Value forced by the resolver, usually because it is the only available",	
+		"ignored" : "Value ignored in the resolution",	
+		"computed" : "Value computed based on other feature values",	
+		"non-negotiated": "Value provided by the resolver since none of the values of the request was available", 	
+		"negotiated": "Value chosen as the result of a negotiation between a provided value(s) and those available at the resolver",
+		"negotiated with request": "Value chosen as the result of a negotiation between the value(s) of the request and those available at the resolver",
+		"negotiated with preferences": "Value chosen as the result of a negotiation between the value(s) of the preferences and those available at the resolver",
+		"negotiated with user-agent": "Value chosen as the result of a negotiation between the value(s) of the user agent (usually the browser) and those available at the resolver",
+		"provided": "Value provided by the resolver since the request did not mention it"
+	}
+	frameApp.controller('detailsController', function($scope) {
+		$scope.f = theFeatures
+		$scope.close = function() {
+			$('#details').modal('hide')
+		}
+		$scope.value = function(item) {
+			if (item.from) {
+				return item.from.string + '-' + item.to.string ; 
+			} else if (item.string) {
+				return item.string 
+			} else {
+				return item ;
+			}
+		}
+		$scope.explain = function(name) {
+			var exp= $scope.f.sources[name.split("[")[0]] ;
+			return sources[exp] ; 
+		}
+		$scope.isopen1 = true; 
+	})
+	.directive('detail', function() {
+		  return {
+			restrict: 'E',
+			template: function(elem,attr) {
+				return $('#detailItem').text().tpl({label:attr['label'],name:attr['name']})
+			}
+		  };
+	});
+</script>

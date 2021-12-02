@@ -1,0 +1,92 @@
+<div																									 ng-controller="infoController">
+	<accordion close-others="true">
+		<accordion-group is-open="isopen2">
+			<accordion-heading>
+					What is the Akoma Ntoso URI Resolver?
+					<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen2, 'glyphicon-chevron-right': !isopen2}"></i>
+			</accordion-heading>
+			<p>Through the Akoma Ntoso URI Resolver it is possible to access all legal documents that are available as URIs according to the
+			Akoma Ntoso Naming Convention. It provides four different ways (or interfaces) to access these documents.</p>
+		</accordion-group>
+		<accordion-group is-open="isopen3">
+			<accordion-heading>
+					What is the Akoma Ntoso Naming Convention?
+					<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen3, 'glyphicon-chevron-right': !isopen3}"></i>
+			</accordion-heading>
+			<p>The Akoma Ntoso Naming Convention is a general syntax for URIs of legal documents. Details can be found 
+			<a href="http://www.akomantoso.org/release-notes/akoma-ntoso-3.0-schema/naming-conventions-1">here</a></p>
+		</accordion-group>
+		<accordion-group is-open="isopen4">
+			<accordion-heading>
+					What are the interfaces of the URI Resolver?
+					<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen4, 'glyphicon-chevron-right': !isopen4}"></i>
+			</accordion-heading>
+			<p>The interfaces are different ways for the resolver to provides its services.</p>
+			<p class="lead text-center">This is the <i>frame</i> interface</p>
+			<div class="row">
+				<div class="col-md-2 column"><strong>Resolve:</strong></div>
+				<div class="col-md-10 column">
+					<a href="{{f.pathBase}}/resolve{{f.features.path}}">/resolve{{f.features.path}}</a><br/>
+					<span ng-if="f.prefs.use=='resolve'">or 
+						<a href="{{f.pathBase}}{{f.features.path}}">{{f.features.path}}</a> (default use)<br/> 
+					</span>
+					<span class="small text-info">Parses the URI of the request into features and returns a JSON structure.</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 column"><strong>Redirect:</strong></div>
+				<div class="col-md-10 column">
+					<a href="{{f.pathBase}}/redirect{{f.features.path}}">/redirect{{f.features.path}}</a><br/>
+					<span ng-if="f.prefs.use=='redirect'">or 
+						<a href="{{f.pathBase}}{{f.features.path}}">{{f.features.path}}</a> (default use)<br/> 
+					</span>
+					<span class="small text-info">Redirects the browser to the requested document as if its physical URL has been used.</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 column"><strong>Dereference:</strong></div>
+				<div class="col-md-10 column">
+					<a href="{{f.pathBase}}/dereference{{f.features.path}}">/dereference{{f.features.path}}</a><br/>
+					<span ng-if="f.prefs.use=='dereference'">or 
+						<a href="{{f.pathBase}}{{f.features.path}}">{{f.features.path}}</a> (default use)<br/> 
+					</span>
+					<span class="small text-info">Shows the requested document as if it resides at the URI stated.</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 column"><strong>frame:</strong></div>
+				<div class="col-md-10 column">
+					<a href="{{f.pathBase}}/frame{{f.features.path}}">/frame{{f.features.path}}</a><br/>
+					<span ng-if="f.prefs.use=='frame'">or 
+						<a href="{{f.pathBase}}{{f.features.path}}">{{f.features.path}}</a> (default use)<br/> 
+					</span>
+					<span class="small text-info">frames the requested document within an iframe adding a navigation bar.</span>
+				</div>
+			</div>
+		</accordion-group>
+		<accordion-group is-open="isopen5">
+			<accordion-heading>
+					Some technical details
+					<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen5, 'glyphicon-chevron-right': !isopen5}"></i>
+			</accordion-heading>
+			<p>The Akoma Ntoso URI Resolver is based on a federated architecture. Users may make requests to different resolvers, each of which 
+			will provide exactly the same answer. The actual resolution is provided by independent services each of whom has competencies on the inner 
+			details of some document bases.</p>
+			<p>The request workflow is composed of four steps:</p>
+			<ul>
+				<li><b>Parsing</b>: the analysis of the request string and the extraction ofn the relevant features. </li>
+				<li><b>Completion</b>: the addition of default values for features not present in the request. </li>
+				<li><b>Resolution</b>: the identification of the physical URL of the document best matching the request.</li>
+				<li><b>Action</b>: The requested interface is used to deliver the resolved document to the user. </li>
+			</ul>
+			<p>More details about the technicalities of the resolver can be found in the 
+				<a ng-href="{{f.pathBase}}/admin/documentation.html">documentation</a>.</p>
+		</accordion-group>
+	</accordion>
+</div>
+<script>
+	frameApp.controller('infoController', function($scope) {
+		$scope.f = theFeatures
+		$scope.isopen2 = true; 
+	});
+</script>

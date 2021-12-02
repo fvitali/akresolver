@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"                                                          ng-app="frameApp">
+	<head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+			<!-- Bootstrap core CSS -->
+			<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+			<!-- Custom styles for this template -->
+	
+			<link href='<?PHP echo $pathBase; ?>/admin/documentation.css' rel="stylesheet">
+
+			<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+			<!--[if lt IE 9]>
+				<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+				<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+			<![endif]-->
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+			<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+			<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+			<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+			<script>
+				var versionNumber = '<?PHP echo $versionNumber; ?>'
+			</script>
+	</head>
+	<body                                                     ng-controller="frameAppCtrl">
+		<script>
+			var frameApp = angular.module('frameApp', ['ui.bootstrap']);
+			frameApp.controller('frameAppCtrl', function($scope) {
+				$scope.versionNumber = versionNumber
+			});
+		</script>
+		<title>The Akoma Ntoso IRI Resolver v. {{versionNumber}}</title>
+		<div class="container" role="main" >
+			<div class="row">
+				<div class="col-md-1"></div>
+				<div class="col-md-10">
+					<div class="jumbotron">
+						<img id='logo' src="admin/an.gif" alt="Akoma Ntoso logo" class="pull-left" style="margin-right: 25px;"/>
+						<h1 class="nocounter">Help and examples for the <br/>
+						<span class="small">Akoma Ntoso IRI Resolver <br/
+						> v. {{versionNumber}}</span></h1>
+					</div>
+					<div class="row">
+						<div class="col-md-12 content">
+						<h1>What is the Akoma Ntoso IRI Resolver?</h1>
+				<p>Through the Akoma Ntoso IRI Resolver it is possible to access all legal documents that are available as IRIs according to the
+				Akoma Ntoso Naming Convention. It provides four different ways (or interfaces) to access these documents.</p>
+				<p>The Akoma Ntoso Naming Convention is a general syntax for IRIs of legal documents. Details can be found 
+				<a href="http://docs.oasis-open.org/legaldocml/akn-nc/v1.0/akn-nc-v1.0.html">here</a></p>
+					
+						<h1>Some examples of Akoma Ntoso IRIs</h1>
+				<p>At the moment, we have set up two working resolvers for Swiss and British legislation.</p> 
+			
+				<p>The Swiss example allows us to explore the language variants in expressions. See for instance 
+				<a target='_new' href="/akn/ch/act/ru/2012/13">/akn/ch/act/ru/2012/13</a>, a Swiss act about Iran. This is a Work level 
+				IRI, corresponding to three different Expression-level IRIs, one for each official language: </p>
+				<ul>
+					<li><a target='_new' href="/akn/ch/act/ru/2012/13/ita@">/akn/ch/act/ru/2012/13/ita@</a></li>
+					<li><a target='_new' href="/akn/ch/act/ru/2012/13/fra@">/akn/ch/act/ru/2012/13/fra@</a></li>
+					<li><a target='_new' href="/akn/ch/act/ru/2012/13/deu@">/akn/ch/act/ru/2012/13/deu@</a></li>
+				</ul>
+			
+				<p>Similarly, yet differently, the UK example allows us to explore time-based versions in expressions. 
+				See for instance <a target='_new' href="/akn/uk/act/pga/2014/2">/akn/uk/act/pga/2014/2</a>, the UK Local Audit and 
+				Accountability Act. This is a Work level IRI for an act that has been modified at least once already. 
+				In fact, there are two different Expression-level IRIs, one for each version:</p>
+				<ul>
+					<li><a target='_new' href="/akn/uk/act/pga/2014/2/eng@2014-01-30">/akn/uk/act/pga/2014/2/eng@2014-01-30</a></li>
+					<li><a target='_new' href="/akn/uk/act/pga/2014/2/eng@2014-03-30">/akn/uk/act/pga/2014/2/eng@2014-03-30</a></li>
+				</ul>
+			
+				<p>Not only it is possible to request them by their official version date, but through the viewDate
+				mechanism it is possible to access to the version in force on the day of the viewDate, as shown in 
+				the following example: </p>
+				<ul>
+					<li><a target='_new' href="/akn/uk/act/pga/2014/2/eng:2014-02-15">/akn/uk/act/pga/2014/2/eng:2014-02-15</a>, e.g., as in force on February 15th, 2014</li>
+					<li><a target='_new' href="/akn/uk/act/pga/2014/2/eng:2014-04-07">/akn/uk/act/pga/2014/2/eng:2014-04-07</a>, e.g., as in force on April 7th, 2014</li>
+				</ul>
+				<div id="push"></div>
+			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+				<p class="muted credit">
+					&copy; 2016 Fabio Vitali, University of Bologna &middot;
+				</p>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" id="cookiebanner"
+    src="admin/cookiebanner.js"
+    data-height="40px" data-position="bottom"
+    data-message="Usiamo cookie per garantire il funzionamento di questo servizio. We use cookies to provide this service.">
+</script>

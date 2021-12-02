@@ -1,0 +1,1074 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <title>Schema documentation for </title>
+      <link rel="stylesheet" href="docHtml.css" type="text/css" /><script type="text/javascript">
+         <!--
+        
+      
+        var button_prefix = 'button_';
+        
+        /**
+        * Returns an element in the current HTML document.
+        *
+        * @param elementID Identifier of HTML element
+        * @return               HTML element object
+        */
+        function getElementObject(elementID) {
+            var elemObj = null;
+            if (document.getElementById) {
+                elemObj = document.getElementById(elementID);
+            }
+            return elemObj;
+        }
+        
+        /**
+        * Switches the state of a collapseable box, e.g.
+        * if it's opened, it'll be closed, and vice versa.
+        *
+        * @param boxID Identifier of box
+        */
+        function switchState(boxID) {
+            var boxObj = getElementObject(boxID);
+            var buttonObj = getElementObject(button_prefix + boxID);
+            if (boxObj == null || buttonObj == null) {
+                // Box or button not found
+            } else if (boxObj.style.display == "none") {
+                // Box is closed, so open it
+                openBox(boxObj, buttonObj);
+            } else if (boxObj.style.display == "block") {
+                // Box is opened, so close it
+                closeBox(boxObj, buttonObj);
+            }
+        }
+        
+        /**
+        * Opens a collapseable box.
+        *
+        * @param boxObj       Collapseable box
+        * @param buttonObj Button controlling box
+        */
+        function openBox(boxObj, buttonObj) {
+            if (boxObj == null || buttonObj == null) {
+                // Box or button not found
+            } else {
+                // Change 'display' CSS property of box
+                boxObj.style.display = "block";
+                
+                // Change text of button
+                if (boxObj.style.display == "block") {
+                    buttonObj.src = "img/btM.gif";
+                }
+            }
+        }
+        
+        /**
+        * Closes a collapseable box.
+        *
+        * @param boxObj       Collapseable box
+        * @param buttonObj Button controlling box
+        */
+        function closeBox(boxObj, buttonObj) {
+            if (boxObj == null || buttonObj == null) {
+                // Box or button not found
+            } else {
+                // Change 'display' CSS property of box
+                boxObj.style.display = "none";
+                
+                // Change text of button
+                if (boxObj.style.display == "none") {
+                    buttonObj.src = "img/btP.gif";
+                }
+            }
+        }
+    
+       function switchStateForAll(buttonObj, boxList) {
+            if (buttonObj == null) {
+                // button not found
+            } else if (buttonObj.value == "+") {
+                // Expand all
+                expandAll(boxList);
+                buttonObj.value = "-";
+            } else if (buttonObj.value == "-") {
+                // Collapse all
+                collapseAll(boxList);
+                buttonObj.value = "+";
+            }
+        }
+        
+        /**
+        * Closes all boxes in a given list.
+        *
+        * @param boxList Array of box IDs
+        */
+        function collapseAll(boxList) {
+            var idx;
+            for (idx = 0; idx < boxList.length; idx++) {
+                var boxObj = getElementObject(boxList[idx]);
+                var buttonObj = getElementObject(button_prefix + boxList[idx]);
+                closeBox(boxObj, buttonObj);
+            }
+        }
+            
+        /**
+        * Open all boxes in a given list.
+        *
+        * @param boxList Array of box IDs
+        */
+        function expandAll(boxList) {
+            var idx;
+            for (idx = 0; idx < boxList.length; idx++) {
+                var boxObj = getElementObject(boxList[idx]);
+                var buttonObj = getElementObject(button_prefix + boxList[idx]);
+                openBox(boxObj, buttonObj);
+            }
+        }
+        
+        /**
+         * Update the message presented in the title of the html page.
+         * - If the documentation was splited by namespace we present something like: "Documentation for namespace 'ns'"
+         * - If the documentation was splited by location we present somehing like: "Documentation for 'Schema.xsd'"
+         * - If no split we always present: "Documentation for 'MainSchema.xsd'"
+         */
+        function updatePageTitle(message) {
+            top.document.title = message;
+        }
+        
+          
+                    
+         /**
+          * Finds an HTML element by its ID and makes it floatable over the normal content.
+          *
+          * @param x_displacement The difference in pixels to the right side of the window from 
+          *           the left side of the element.
+          * @param y_displacement The difference in pixels to the right side of the window from 
+          *           the top of the element.          
+          */
+         function findAndFloat(id, x_displacement, y_displacement){
+
+            var element = getElementObject(id);            
+            
+            window[id + "_obj"] = element;
+            
+            if(document.layers) {
+               element.style = element;
+            }
+            
+            element.current_y = y_displacement;      
+            element.first_time = true;
+         
+            element.floatElement = function(){
+               // It may be closed by an user action.
+                
+               // Target X and Y coordinates.
+               var x, y;
+               
+               var myWidth = 0, myHeight = 0;
+               if( typeof( window.innerWidth ) == 'number' ) {
+                  //Non-IE
+                  myWidth = window.innerWidth;
+                  myHeight = window.innerHeight;
+               } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+                  //IE 6+ in 'standards compliant mode'
+                  myWidth = document.documentElement.clientWidth;
+                  myHeight = document.documentElement.clientHeight;
+               } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+                  //IE 4 compatible
+                  myWidth = document.body.clientWidth;
+                  myHeight = document.body.clientHeight;
+               }
+               
+               
+               x = myWidth - x_displacement;
+               
+               var ns = (navigator.appName.indexOf("Netscape") != -1);               
+               y = ns ? pageYOffset : document.documentElement && document.documentElement.scrollTop ? 
+                  document.documentElement.scrollTop : document.body.scrollTop;               
+               y = y + y_displacement;               
+               
+               // The current y is the current coordinate of the floating element.
+               // This should be at the limit the y target coordinate.
+               this.current_y += (y - this.current_y)/1.25;
+               
+               // Add the pixels constant after the values
+               // and move the element.
+               var px = document.layers ? "" : "px";
+               this.style.left =  x + px;
+               this.style.top =  this.current_y + px;
+                              
+               setTimeout(this.id + "_obj.floatElement()", 100);
+            }
+            
+            element.floatElement();
+            return element;
+          }
+
+         /**
+          * Finds an HTML element by its ID and makes it floatable over the normal content.
+          *
+          * @param x_displacement The difference in pixels to the right side of the window from 
+          *           the left side of the element.
+          * @param y_displacement The difference in pixels to the right side of the window from 
+          *           the top of the element.          
+          */
+         function selectTOCGroupBy(id, isChunked, indexFileLocation, indexFileNamespace, indexFileComponent){
+
+            if (!isChunked) {
+             var selectIds = new Array('toc_group_by_namespace', 'toc_group_by_location', 'toc_group_by_component_type');
+             // Make all the tabs invisible.
+               for (i = 0; i < 3; i++){
+                  var tab = getElementObject(selectIds[i]);
+                  tab.style.display = 'none';
+               }
+               var selTab = getElementObject(id);
+               selTab.style.display = 'block';
+            } else {
+             if (id == 'toc_group_by_namespace') {
+               parent.indexFrame.location = indexFileNamespace;
+             } else  if (id == 'toc_group_by_location') {
+               parent.indexFrame.location = indexFileLocation;
+             } else  if (id == 'toc_group_by_component_type') {
+              parent.indexFrame.location = indexFileComponent;
+             }
+            }
+         }
+          
+
+    
+                        //--></script></head>
+   <body>
+      <h2><a id="INDEX">Table of Contents</a></h2>
+      <div class="toc">
+         <form action="none">
+            <div><span> Group by: <select id="selectTOC" onchange="selectTOCGroupBy(this.options[this.selectedIndex].value, true, 'akomantoso30.indexList.html', 'akomantoso30.indexListns.html', 'akomantoso30.indexListcomp.html');">
+                     <option value="toc_group_by_namespace">Namespace</option>
+                     <option value="toc_group_by_location">Location</option>
+                     <option value="toc_group_by_component_type" selected="selected">Component Type</option></select></span></div>
+         </form>
+         <div class="level1" id="toc_group_by_component_type" style="display:block">
+            <div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Main_schema" type="image" value="-" src="img/btM.gif" onclick="switchState('Main_schema');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Main Schema</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Main_schema" class="componentGroup" style="display:block">
+                                          <div><b><a href="akomantoso30_xsd.html#akomantoso30.xsd" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">akomantoso30.xsd</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Imported_schema" type="image" value="-" src="img/btM.gif" onclick="switchState('Imported_schema');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Imported Schemas</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Imported_schema" class="componentGroup" style="display:block">
+                                          <div><b><a href="xml_xsd.html#xml.xsd" target="mainFrame" title="http://www.w3.org/XML/1998/namespace" onclick="updatePageTitle('Schema documentation for xml.xsd')">xml.xsd</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Element" type="image" value="-" src="img/btM.gif" onclick="switchState('Element');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Elements</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Element" class="componentGroup" style="display:block">
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRExpression" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRExpression</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRItem" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRItem</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRManifestation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRManifestation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRWork" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRWork</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRalias" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRalias</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRauthor" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRauthor</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRauthoritative" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRauthoritative</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRcountry" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRcountry</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRdate" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRdate</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRformat" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRformat</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRlanguage" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRlanguage</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRmasterExpression" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRmasterExpression</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRname" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRname</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRnumber" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRnumber</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRportion" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRportion</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRprescriptive" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRprescriptive</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRsubtype" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRsubtype</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRthis" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRthis</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRtranslation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRtranslation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRuri" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRuri</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#FRBRversionNumber" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">FRBRversionNumber</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCConcept" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCConcept</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCEvent" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCEvent</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCLocation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCLocation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCObject" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCObject</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCOrganization" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCOrganization</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCPerson" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCPerson</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCProcess" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCProcess</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCReference" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCReference</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCRole" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCRole</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCTerm" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCTerm</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#a" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">a</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#abbr" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">abbr</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#act" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">act</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#activeModifications" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">activeModifications</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#activeRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">activeRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#address" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">address</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#adjournment" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">adjournment</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#administrationOfOath" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">administrationOfOath</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#affectedDocument" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">affectedDocument</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#akomaNtoso" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">akomaNtoso</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#alinea" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">alinea</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#alternativeReference" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">alternativeReference</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendment" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendment</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentBody" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentBody</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentContent" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentContent</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentHeading" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentHeading</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentJustification" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentJustification</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentList" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentList</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentReference" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentReference</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#analysis" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">analysis</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#answer" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">answer</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#application" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">application</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#applies" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">applies</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#argument" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">argument</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#arguments" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">arguments</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#article" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">article</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#attachment" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">attachment</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#attachmentOf" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">attachmentOf</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#attachments" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">attachments</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#authorialNote" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">authorialNote</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#b" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">b</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#background" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">background</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#bill" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">bill</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#block" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">block</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blockContainer" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blockContainer</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blockList" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blockList</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#body" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">body</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#book" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">book</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#br" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">br</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#caption" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">caption</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#change" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">change</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#chapter" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">chapter</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#citation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">citation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#citations" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">citations</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#classification" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">classification</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#clause" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">clause</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#collectionBody" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">collectionBody</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#communication" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">communication</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#component" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">component</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#componentData" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">componentData</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#componentInfo" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">componentInfo</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#componentRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">componentRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#components" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">components</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#concept" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">concept</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#conclusions" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">conclusions</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#condition" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">condition</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#container" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">container</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#content" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">content</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#contrasts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">contrasts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#count" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">count</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#courtType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">courtType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#coverPage" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">coverPage</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#crossHeading" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">crossHeading</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_date" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">date</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#debate" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">debate</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#debateBody" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">debateBody</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#debateReport" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">debateReport</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#debateSection" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">debateSection</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#decision" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">decision</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#declarationOfVote" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">declarationOfVote</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#decoration" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">decoration</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#def" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">def</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#del" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">del</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#derogates" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">derogates</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#destination" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">destination</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#dissentsFrom" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">dissentsFrom</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#distinguishes" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">distinguishes</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#div" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">div</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#division" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">division</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#doc" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">doc</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docAuthority" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docAuthority</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docCommittee" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docCommittee</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docDate" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docDate</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docIntroducer" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docIntroducer</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docJurisdiction" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docJurisdiction</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docNumber" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docNumber</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docProponent" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docProponent</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docPurpose" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docPurpose</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docStage" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docStage</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docStatus" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docStatus</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docTitle" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docTitle</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docketNumber" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docketNumber</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#documentCollection" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">documentCollection</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#documentRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">documentRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#domain" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">domain</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#duration" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">duration</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#efficacy" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">efficacy</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#efficacyMod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">efficacyMod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#embeddedStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">embeddedStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#embeddedText" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">embeddedText</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#entity" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">entity</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eol" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eol</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eop" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eop</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#event" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">event</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eventRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eventRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#extends" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">extends</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#fillIn" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">fillIn</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#force" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">force</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#forceMod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">forceMod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#foreign" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">foreign</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#formula" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">formula</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#from" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">from</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#hasAttachment" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">hasAttachment</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#hcontainer" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">hcontainer</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#header" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">header</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#heading" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">heading</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#i" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">i</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#identification" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">identification</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#img" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">img</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#implicitReference" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">implicitReference</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#indent" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">indent</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_inline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">inline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ins" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ins</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#interstitial" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">interstitial</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#intro" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">intro</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#introduction" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">introduction</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#isAnalogTo" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">isAnalogTo</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#item" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">item</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judge" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judge</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judgment" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judgment</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judgmentBody" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judgmentBody</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judicial" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judicial</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#jurisprudence" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">jurisprudence</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#keyword" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">keyword</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#lawyer" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">lawyer</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#legalSystemMod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">legalSystemMod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#legislature" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">legislature</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_level" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">level</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#li" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">li</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#lifecycle" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">lifecycle</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#list" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">list</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#listIntroduction" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">listIntroduction</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#listWrapUp" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">listWrapUp</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#location" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">location</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#longTitle" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">longTitle</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mainBody" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mainBody</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mapping" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mapping</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mappings" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mappings</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#marker" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">marker</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#meaningMod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">meaningMod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#meta" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">meta</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ministerialStatements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ministerialStatements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mmod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mmod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#motivation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">motivation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mref" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mref</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#narrative" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">narrative</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#nationalInterest" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">nationalInterest</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#neutralCitation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">neutralCitation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#new" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">new</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#note" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">note</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#noteRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">noteRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#notes" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">notes</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#noticesOfMotion" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">noticesOfMotion</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#num" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">num</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#object" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">object</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#officialGazette" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">officialGazette</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ol" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ol</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#old" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">old</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#omissis" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">omissis</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#opinion" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">opinion</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#oralStatements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">oralStatements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#organization" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">organization</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#original" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">original</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#other" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">other</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#otherAnalysis" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">otherAnalysis</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#otherReferences" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">otherReferences</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_outcome" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">outcome</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#overrules" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">overrules</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#p" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">p</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#papers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">papers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#paragraph" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">paragraph</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#parliamentary" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">parliamentary</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#part" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">part</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#party" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">party</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#passiveModifications" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">passiveModifications</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#passiveRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">passiveRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#person" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">person</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#personalStatements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">personalStatements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#petitions" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">petitions</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#placeholder" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">placeholder</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#point" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">point</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#pointOfOrder" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">pointOfOrder</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#portion" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">portion</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#portionBody" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">portionBody</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#prayers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">prayers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#preamble" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">preamble</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#preface" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">preface</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#presentation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">presentation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#preservation" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">preservation</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#previous" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">previous</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#proceduralMotions" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">proceduralMotions</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#process" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">process</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#proprietary" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">proprietary</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#proviso" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">proviso</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#publication" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">publication</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#putsInQuestion" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">putsInQuestion</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#quantity" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">quantity</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#question" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">question</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#questions" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">questions</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#quorum" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">quorum</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#quorumVerification" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">quorumVerification</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#quotedStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">quotedStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#quotedText" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">quotedText</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#recital" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">recital</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#recitals" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">recitals</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#recordedTime" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">recordedTime</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#recount" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">recount</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ref" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ref</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#references" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">references</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#relatedDocument" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">relatedDocument</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#remark" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">remark</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#remedies" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">remedies</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#resolutions" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">resolutions</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#restriction" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">restriction</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#restrictions" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">restrictions</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#restricts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">restricts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#result" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">result</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#rmod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">rmod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_role" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">role</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#rollCall" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">rollCall</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#rref" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">rref</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#rule" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">rule</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#scene" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">scene</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#scopeMod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">scopeMod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#section" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">section</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#session" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">session</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#shortTitle" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">shortTitle</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#signature" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">signature</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_source" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">source</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#span" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">span</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#speech" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">speech</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#speechGroup" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">speechGroup</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#statement" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">statement</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#step" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">step</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#sub" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">sub</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subFlow" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subFlow</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subchapter" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subchapter</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subclause" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subclause</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subdivision" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subdivision</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subheading" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subheading</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#sublist" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">sublist</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subparagraph" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subparagraph</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subpart" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subpart</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subrule" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subrule</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subsection" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subsection</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subtitle" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subtitle</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#summary" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">summary</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#sup" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">sup</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#supports" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">supports</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#table" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">table</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#tblock" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">tblock</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#td" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">td</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#temporalData" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">temporalData</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#temporalGroup" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">temporalGroup</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#term" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">term</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#textualMod" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">textualMod</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#th" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">th</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_time" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">time</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#timeInterval" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">timeInterval</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#title" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">title</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#toc" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">toc</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#tocItem" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">tocItem</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#tome" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">tome</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#tr" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">tr</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#transitional" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">transitional</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#u" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">u</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ul" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ul</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#vote" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">vote</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#voting" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">voting</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#workflow" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">workflow</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#wrapUp" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">wrapUp</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#writtenStatements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">writtenStatements</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Complex_Type" type="image" value="-" src="img/btM.gif" onclick="switchState('Complex_Type');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Complex Types</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Complex_Type" class="componentGroup" style="display:block">
+                                          <div><b><a href="akomantoso30_xsd.html#Amendments" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">Amendments</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#akomaNtosoType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">akomaNtosoType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#althierarchy" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">althierarchy</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentBodyType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentBodyType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#anyOtherType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">anyOtherType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#argumentType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">argumentType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#basehierarchy" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">basehierarchy</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#basicopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">basicopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blockContainerType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blockContainerType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blockListType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blockListType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blocksopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blocksopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blocksreq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blocksreq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#bodyType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">bodyType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#booleanValueType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">booleanValueType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#citationHierarchy" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">citationHierarchy</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#collectionBodyType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">collectionBodyType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#collectionStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">collectionStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#containerType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">containerType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#coreProperties" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">coreProperties</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#countType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">countType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#debateBodyType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">debateBodyType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#debateStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">debateStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docContainerType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docContainerType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eolType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eolType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#hierarchicalStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">hierarchicalStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#hierarchy" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">hierarchy</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#inline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">inline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#inlinereq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">inlinereq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#inlinereqreq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">inlinereqreq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#itemType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">itemType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judgmentBodyType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judgmentBodyType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judgmentStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judgmentStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judicialArgumentType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judicialArgumentType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judicialArguments" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judicialArguments</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#linkType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">linkType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#listItems" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">listItems</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#maincontent" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">maincontent</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#markeropt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">markeropt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#markerreq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">markerreq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#metaopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">metaopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#metareq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">metareq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#modType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">modType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#modificationType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">modificationType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#openStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">openStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#parliamentaryAnalysis" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">parliamentaryAnalysis</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#parliamentaryAnalysisType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">parliamentaryAnalysisType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#periodType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">periodType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#portionBodyType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">portionBodyType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#portionStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">portionStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#preambleopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">preambleopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#prefaceopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">prefaceopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#recitalHierarchy" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">recitalHierarchy</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#refItems" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">refItems</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#referenceType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">referenceType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#speechType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">speechType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#srcType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">srcType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subFlowStructure" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subFlowStructure</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#valueType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">valueType</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Simple_Type" type="image" value="-" src="img/btM.gif" onclick="switchState('Simple_Type');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Simple Types</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Simple_Type" class="componentGroup" style="display:block">
+                                          <div><b><a href="akomantoso30_xsd.html#EfficacyMods" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">EfficacyMods</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ForceMods" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ForceMods</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#LegalSystemMods" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">LegalSystemMods</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#MeaningMods" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">MeaningMods</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ScopeMods" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ScopeMods</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TextualMods" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TextualMods</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#agentRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">agentRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#conceptRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">conceptRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eIdRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eIdRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eventRefRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eventRefRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_eventType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eventType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_language" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">language</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#manifestationURI" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">manifestationURI</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#noWhiteSpace" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">noWhiteSpace</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_opinionType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">opinionType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#placementType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">placementType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#posType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">posType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#referenceRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">referenceRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_remarkType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">remarkType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_restrictionType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">restrictionType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_resultType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">resultType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#roleRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">roleRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#statusType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">statusType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#temporalGroupRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">temporalGroupRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#timeType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">timeType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#versionType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">versionType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#voteRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">voteRef</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#wIdRef" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">wIdRef</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Attribute" type="image" value="-" src="img/btM.gif" onclick="switchState('Attribute');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Attributes</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Attribute" class="componentGroup" style="display:block">
+                                          <div><b><a href="xml_xsd.html#base" target="mainFrame" title="http://www.w3.org/XML/1998/namespace" onclick="updatePageTitle('Schema documentation for xml.xsd')">@xml:base</a></b></div>
+                                          <div><b><a href="xml_xsd.html#id" target="mainFrame" title="http://www.w3.org/XML/1998/namespace" onclick="updatePageTitle('Schema documentation for xml.xsd')">@xml:id</a></b></div>
+                                          <div><b><a href="xml_xsd.html#lang" target="mainFrame" title="http://www.w3.org/XML/1998/namespace" onclick="updatePageTitle('Schema documentation for xml.xsd')">@xml:lang</a></b></div>
+                                          <div><b><a href="xml_xsd.html#space" target="mainFrame" title="http://www.w3.org/XML/1998/namespace" onclick="updatePageTitle('Schema documentation for xml.xsd')">@xml:space</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Element_Group" type="image" value="-" src="img/btM.gif" onclick="switchState('Element_Group');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Element Groups</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Element_Group" class="componentGroup" style="display:block">
+                                          <div><b><a href="akomantoso30_xsd.html#ANblock" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANblock</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANcontainers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANcontainers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANheaderInline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANheaderInline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANhier" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANhier</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANinline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANinline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANmarker" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANmarker</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANsemanticInline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANsemanticInline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANsubFlow" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANsubFlow</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#ANtitleInline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">ANtitleInline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#HTMLblock" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">HTMLblock</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#HTMLcontainers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">HTMLcontainers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#HTMLinline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">HTMLinline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#HTMLmarker" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">HTMLmarker</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#TLCs" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">TLCs</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentBlock" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentBlock</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#amendmentInline" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">amendmentInline</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#basicContainers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">basicContainers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#blockElements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">blockElements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#containerElements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">containerElements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#docRefs" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">docRefs</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#documentType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">documentType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#exprProperties" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">exprProperties</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#hierElements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">hierElements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#inlineCM" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">inlineCM</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#inlineElements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">inlineElements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#judgmentBlock" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">judgmentBlock</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#manifProperties" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">manifProperties</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#markerElements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">markerElements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#preambleContainers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">preambleContainers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#prefaceContainers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">prefaceContainers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#speechSection" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">speechSection</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#subFlowElements" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">subFlowElements</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#workProperties" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">workProperties</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="horizontalLayout">
+                  <table class="rt">
+                     <tr>
+                        <td class="rt_cornerTopLeft"></td>
+                        <td class="rt_lineTop"></td>
+                        <td class="rt_cornerTopRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_lineLeft"></td>
+                        <td class="rt_content">
+                           <table class="componentGroup">
+                              <tbody>
+                                 <tr>
+                                    <td class="componentGroup"><input id="button_Attribute_Group" type="image" value="-" src="img/btM.gif" onclick="switchState('Attribute_Group');" class="control" /></td>
+                                    <td class="componentGroup">
+                                       <div class="componentGroupTitle">Attribute Groups</div>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="componentGroup"></td>
+                                    <td class="componentGroup">
+                                       <div id="Attribute_Group" class="componentGroup" style="display:block">
+                                          <div><b><a href="akomantoso30_xsd.html#HTMLattrs" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">HTMLattrs</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#agent" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">agent</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#alt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">alt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#authoritative" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">authoritative</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#booleanvalue" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">booleanvalue</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#cellattrs" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">cellattrs</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#contains" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">contains</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#core" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">core</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#coreopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">coreopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#corereq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">corereq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#corereqreq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">corereqreq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#date" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">date</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#dictionary" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">dictionary</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_duration" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">duration</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#efficacyModType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">efficacyModType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#enactment" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">enactment</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#eventType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">eventType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#fillInWidth" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">fillInWidth</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#for" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">for</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#forceModType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">forceModType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#fromLanguage" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">fromLanguage</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#frozen" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">frozen</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#idopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">idopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#idreq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">idreq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#imgAtts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">imgAtts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#interval" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">interval</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#language" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">language</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#lawyerAtts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">lawyerAtts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#legalSystemModType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">legalSystemModType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#level" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">level</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#link" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">link</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#linkopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">linkopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#mappingAtts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">mappingAtts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#meaningModType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">meaningModType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#modifiers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">modifiers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#name" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">name</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#normalizedAtt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">normalizedAtt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#http___docs.oasis-open.org_legaldocml_ns_akn_3.0_notes" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">notes</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#number" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">number</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#opinionType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">opinionType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#optvalue" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">optvalue</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#originalText" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">originalText</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#originating" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">originating</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#outcome" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">outcome</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#period" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">period</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#pivot" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">pivot</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#portionAtt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">portionAtt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#pos" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">pos</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#quote" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">quote</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#range" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">range</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#rangeOpt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">rangeOpt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#recordedTimeType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">recordedTimeType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#refers" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">refers</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#refersreq" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">refersreq</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#remarkType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">remarkType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#restrictionType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">restrictionType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#resultType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">resultType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#role" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">role</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#scopeModType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">scopeModType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#show" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">show</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#showopt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">showopt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#source" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">source</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#speechAtts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">speechAtts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#src" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">src</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#tableAtts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">tableAtts</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#target" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">target</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#textualModType" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">textualModType</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#time" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">time</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#type" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">type</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#upTo" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">upTo</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#upToOpt" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">upToOpt</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#value" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">value</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#voteAtts" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">voteAtts</a></b></div>
+                                          <div><b><a href="xml_xsd.html#specialAttrs" target="mainFrame" title="http://www.w3.org/XML/1998/namespace" onclick="updatePageTitle('Schema documentation for xml.xsd')">xml:specialAttrs</a></b></div>
+                                          <div><b><a href="akomantoso30_xsd.html#xmllang" target="mainFrame" title="http://docs.oasis-open.org/legaldocml/ns/akn/3.0" onclick="updatePageTitle('Schema documentation for akomantoso30.xsd')">xmllang</a></b></div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                        <td class="rt_lineRight"></td>
+                     </tr>
+                     <tr>
+                        <td class="rt_cornerBottomLeft"></td>
+                        <td class="rt_lineBottom"></td>
+                        <td class="rt_cornerBottomRight"></td>
+                     </tr>
+                  </table>
+               </div>
+               <div style="clear:left"></div>
+            </div>
+         </div>
+      </div>
+      <div class="footer">
+         <hr />
+         <div align="center">XML Schema documentation generated by <a href="http://www.oxygenxml.com" target="_parent"><span class="oXygenLogo"><span class="redX">&lt;</span>o<span class="redX">X</span>ygen<span class="redX">/&gt;</span></span></a><sup>®</sup> XML Editor.
+         </div>
+      </div>
+   </body>
+</html>

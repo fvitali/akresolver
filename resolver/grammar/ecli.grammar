@@ -1,0 +1,93 @@
+SL: '/'
+C: ':'
+number: /[0-9]+/
+number2: /[0-9]{2}/
+number4: /[0-9]{4}/
+chars: /[a-zA-Z]+/
+any: /.+/
+token: chars (number | chars)*
+string: (number | chars)+
+
+dashH: recurDash 
+	function recurDash (&$res, $sub) {
+		if (count($sub['item'])>1) 
+			array_unshift($sub['item'],$sub['text']);
+		$res['item'] = $sub['item'];
+	}
+	
+recurDash: item:string '-' a:recurDash | c:string
+	function c (&$res, $sub) {
+		$res['item'] = array($sub);
+	}
+	function a (&$res, $sub) {
+		array_unshift($sub['item'],$res['item']);
+		$res['item'] = $sub['item'];
+	}
+
+dotH: recurDot 
+	function recurDot (&$res, $sub) {
+		if (count($sub['item'])>1) 
+			array_unshift($sub['item'],$sub['text']);
+		$res['item'] = $sub['item'];
+	}
+	
+recurDot: item:string '.' a:recurDot | c:string
+	function c (&$res, $sub) {
+		$res['item'] = array($sub);
+	}
+	function a (&$res, $sub) {
+		array_unshift($sub['item'],$res['item']);
+		$res['item'] = $sub['item'];
+	}
+
+date: dateElements
+	function dateElements (&$res, $sub) {
+		$res = $sub;
+		$res['string'] = $res['text'] ; 
+	}
+
+dateElements: year:number4 '-' month:number2 '-' day:number2 !number | year:number4 '-' month:number2 !number | year:number4
+
+Expr: > :uri > extra:any? > | extra:any
+uri: SL? w:Work (SL e:Expression (m:Manifestation)? )?
+	function * (&$res, $sub) {
+		if (!isset($res['parts'])) $res['parts'] = array() ;
+		$res['parts'] =array_merge($res['parts'],$sub) ;
+	}
+
+Work: 
+	worktype:ecli C
+	jurisdiction:dashH C
+	workactor:dashH C
+	workDate:date C
+	workNumber:dotH
+
+Expression: 
+	lang:dashH 
+	( 
+		'@' :version | 
+		':' :view 
+	)(
+		';' exprSource:token 
+		(SL exprDate:date)?
+	)?
+	
+Manifestation: 
+	(SL manifSource:token)? 
+	(SL exprDate:date)? 
+	'.' format:token
+		function format( &$res, $sub ) { $res['format'] = array($sub) ;}
+
+version: date:date '-' number:string | date:date | number:string | today:""
+		function today( &$res, $sub ) { $res['date'] = 'TODAY' ;}
+
+
+view: range:range | date:date | today:""
+		function today( &$res, $sub ) { $res['date'] = 'TODAY' ;}
+
+range: from:date '-' to:date 
+
+ecli: e:'ECLI'
+	function e( &$res, $sub ) {
+		$res['text'] = 'judgment' ; 		
+	}

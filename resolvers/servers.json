@@ -1,0 +1,14 @@
+[
+	{
+		"sort":"1",
+		"IRIregexp":"\/ch[-\/]",
+		"Resolver":"http://akn.web.cs.unibo.it/ch/chresolver.php?q=$query",
+		"Explanation":"Resolver for Swiss Federal legislation"
+	},
+	{
+		"sort":"2",
+		"IRIregexp":"\/uk[-\/]",
+		"Resolver":"http://akn.web.cs.unibo.it/uk/ukresolver.php?q=$query",
+		"Explanation":"Resolver for Legislation.gov.uk"
+	}
+]

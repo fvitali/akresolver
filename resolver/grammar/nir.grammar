@@ -1,0 +1,58 @@
+SL: '/'
+DP: ':'
+PV: ';'
+V : ','
+PLUS: '+'
+number: /[0-9]+/
+number2: /[0-9]{2}/
+number4: /[0-9]{4}/
+chars: /[a-zA-Z\.]+/
+
+numero: /[0-9]/
+minuscolo: /[a-z]/
+normale: (numero | minuscolo | '.' | '-' | '_')+
+other: /=-_'()/
+any: /.+/
+token: normale*
+string: (number | chars )+
+dataString: number4 '-' number2 '-' number2
+
+expr: > :schema :documento :versione? :comunicato* :manifestazione? :partizione? :proprieta? :extra? > | :extra
+extra: any
+
+schema: "urn:nir:"
+
+documento: :autorita DP :provvedimento (DP :estremi (DP :annesso)*)?
+
+autorita: :soggetto (PLUS :soggetto)*
+soggetto: 
+	istituzione:token PV organo:token PV organo:token PV organo:token PV organo:token PV funzione:token | 
+	istituzione:token PV organo:token PV organo:token PV organo:token PV funzione:token | 
+	istituzione:token PV organo:token PV organo:token PV funzione:token | 
+	istituzione:token PV organo:token PV funzione:token | 
+	istituzione:token PV funzione:token | 
+	carica:token
+suggetto: elemento:token (PV elemento:token)*
+provvedimento: tipo:token ( PV :spec)*
+estremi: 
+	(:date (PV :numeri (V :numeri)*) ?) |
+	(:periodo PV :date (PV :numeri (V :numeri)*) ?) |
+	(:periodo (PV :numeri (V :numeri)*) ?)
+
+date: data:dataString (V data:dataString)*
+data: data:dataString
+periodo: token
+numeri: 'nir-' numero+ | token
+
+annesso: id:token (PV :spec)*
+spec: token
+vigenza: data
+
+versione: '@' (:data | :spec) ( PV (:vigenza | :spec))?
+
+comunicato: '*' tipo:token PV :data
+
+manifestazione: '$' formato:(formato:token (PV :spec)*) editore:(DP nome:token (PV :spec)*) (componente:(DP nome:token (PV :spec)*))?
+
+partizione: '~' id:token
+proprieta: '!' ( 'vig=' vigore:data | 'eff=' efficacia:data)

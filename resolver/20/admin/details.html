@@ -1,0 +1,105 @@
+<div                                                                                      ng-controller='detailsController'>
+	<p>These features are used to identify the actual document provided. Some features were provided via the request URI and some were added automatically by the application</p>
+	<accordion close-others="true">
+		<accordion-group is-open="isopen1">
+			<accordion-heading>
+				Work-level features
+				<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen1, 'glyphicon-chevron-right': !isopen1}"></i>
+			</accordion-heading>
+			<div class="row" ng-if="f.features.type">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Type:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.type}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.type]}} {{f.explanations['type']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.subtype">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Subtype:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.subtype}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.subtype]}} {{f.explanations['subtype']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.creator">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Creator:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.creator}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.creator]}} {{f.explanations['creator']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.creationDate">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Creation Date:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.creationDate}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.creationDate]}} {{f.explanations['creationDate']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.number">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Number:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.number}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.number]}} {{f.explanations['number']}}</div>
+			</div>
+		</accordion-group>
+		<accordion-group is-open="isopen2">
+			<accordion-heading>
+				Expression-level features
+				<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen2, 'glyphicon-chevron-right': !isopen2}"></i>
+			</accordion-heading>
+			<div class="row" ng-if="f.features.language">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Language:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.language}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.lang3]}} <br/>{{f.explanations['language']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.versionDate">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Version date:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.versionDate}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.versionDate]}} {{f.explanations['versionDate']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.viewDate && !f.features.endViewDate">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>View date:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.viewDate}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.viewDate]}} {{f.explanations['viewDate']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.endViewDate">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>View range:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.viewDate}} to {{f.features.endViewDate}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.viewDate]}} {{f.explanations['viewDate']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.exprAuthority">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Version author:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.exprAuthority}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.exprAuthority]}} {{f.explanations['exprAuthority']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.contentDate">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>Content date:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.contentDate}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.contentDate]}} {{f.explanations['contentDate']}}</div>
+			</div>
+		</accordion-group>
+		<accordion-group is-open="isopen3">
+			<accordion-heading>
+				Manifestation-level features
+				<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen3, 'glyphicon-chevron-right': !isopen3}"></i>
+			</accordion-heading>
+			<div class="row" ng-if="f.features.manifAuthority">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>FIle author:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.manifAuthority}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.manifAuthority]}} {{f.explanations['manifAuthority']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.manifDate">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>File date:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.manifDate}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.manifDate]}} {{f.explanations['manifDate']}}</div>
+			</div>
+			<div class="row" ng-if="f.features.format">
+				<div class="col-md-3 col-sm-3 col-xs-6 column"><strong>File format:</strong></div>
+				<div class="col-md-3 col-sm-3 col-xs-6 column text-primary">{{f.features.format}}</div>
+				<div class="col-md-6 col-sm-6 col-xs-12 column text-info smaller">{{f.explanations[f.features.format]}} {{f.explanations['format']}}</div>
+			</div>
+		</accordion-group>
+	</accordion>
+	<div class="text-right">
+		<button type="button" class="btn btn-primary" ng-click="close()">Ok</button>
+	</div>
+</div>
+<script>
+	wrapApp.controller('detailsController', function($scope) {
+		$scope.f = theFeatures
+		$scope.close = function() {
+			$('#details').modal('hide')
+		}
+		$scope.isopen1 = true; 
+	});
+</script>

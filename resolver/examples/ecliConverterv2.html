@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!--
+ECLI converter - examples 
+by Fabio Vitali
+This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0/).
+You are free to:
+* Share - copy and redistribute the material in any medium or format
+* Adapt - remix, transform, and build upon the material
+for any purpose, even commercially.
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+Under the following terms:
+* Attribution - You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+-->
+<html>
+	<head>
+		<title>ECLI converter</title>
+		<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/journal/bootstrap.min.css" rel="stylesheet">
+		<link href="base.css" rel="stylesheet">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"> </script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+		<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"> </script>
+		<script src="./boecli.js"> </script>
+		
+		<script> 
+			$(document).ready(main);
+
+			function main() {
+				$('.right').height($(document).height() - (30 +  $('.navbar').height() + $('.footer').height()))
+				$('.left').height($(document).height() - (30 + $('.navbar').height() + $('.footer').height()))
+			}
+		</script>
+		<script>
+			$(document).on('click','.example',function(){
+				$('#input').val(this.textContent.trim())
+				convert(this.textContent.trim()); 
+			});
+			$(document).on('click','#start',function(){
+				convert($('#input').val().trim() ); 
+			});
+			$(document).on('click','#start2',function(){
+				convert2($('#input2').val().trim() ); 
+			});
+			
+			function convert(ecli) {
+				$('#ecli10').html(boecli.convert(ecli)) ;
+				$('#output').html(boecli.analyze(ecli)) ;
+				$('#output-lcm').html(boecli.analyzeLCM(ecli)) ;
+			}
+			function convert2(json) {
+				$('#ecli').html(boecli.generate(json)) ;
+				$('#output').html("") ;
+				$('#output-lcm').html("") ;
+			}
+		</script>
+		<style type="text/css">
+		
+			h5 {
+				font-style: italic;
+			}
+			.example {
+				cursor: pointer; 
+				cursor: hand;
+				text-decoration: underline; 
+				color: blue; 
+			}
+
+			#start {
+				margin-top: 5px; 
+			}			
+			li {
+				font-size: 110% ; 
+			}
+			
+			.incorrect {
+				font-size: 90%; 
+				color: red; 
+			}
+			.correction {
+				font-size: 90%; 
+				color: green; 
+			}
+			
+			#patternList li {
+				font-size : 85%;
+overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  			}
+		</style>
+	</head>
+<body>
+		<div class="wrap">
+			<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" 
+								data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">BOECLI playground v. 2.0</a>
+					</div>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+						<li><a href="#" role="button" data-toggle="modal" data-target="#about">About</a></li>
+						<li><a href="#" role="button" data-toggle="modal" data-target="#help">Help</a></li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+
+			<div class="container body">
+				<div class="row clearfix">
+					<div class="col-md-7 left">
+						<div class="panel-group spaceOver" id="leftAccordion">
+						  <div class="panel panel-default" id="Panel-Input">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+BOECLI identifier
+							  </h4>
+							</div>
+							<div id="collapsePrefixes">
+							  <div class="panel-body">
+<p><textarea id="input" autofocus cols="70" rows="2" style="max-height:50px;min-height:50px; resize: none"
+	placeholder="type in a ECLI URI or a JSON data block from the BOECLI services"
+>ECLI:EU:C:2014:317(:ACA:ESP:V1)</textarea>
+<button id="start" type="button">Perform</button></p>
+							  </div>
+							</div>
+						  </div>
+						  <div class="panel panel-default" id="Panel-InputLCM">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+JSON-LD fragment
+							  </h4>
+							</div>
+							<div id="collapsePrefixes">
+							  <div class="panel-body">
+<p><textarea id="input2" autofocus cols="70" rows="10" style="max-height:300px;min-height:300px; resize: none"
+	placeholder="type in a ECLI URI or a JSON data block from the BOECLI services"
+>
+</textarea>
+<button id="start2" type="button">Perform</button></p>
+							  </div>
+							</div>
+						  </div>
+						  <div class="panel panel-default" id="Panel-Examples">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-Examples">
+								  ECLI Examples
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-Examples" class="panel-collapse collapse">
+							  <div class="panel-body">
+<ul>
+	<li><span class="example">ECLI:EU:C:2014:317 </span></li>
+	<li><span class="example">ECLI:EU:C:2014:317(:ACA:ESP:V1) </span></li>
+	<li><span class="example">ECLI:EU:C:2014:317(:ESP)</span></li>
+	<li><span class="example">ECLI:EU:C:2014:317(:PDF)</span></li>
+	<li><span class="example">ECLI:IT:CASS:2017:9678PEN(:PDF)</span></li>
+	<li><span class="example">ECLI:DE:BVerfG:2009:es20090630.2bve000208(:ENG)(:HTML)</span></li>
+	<li><span class="example">ECLI:EU:C:2014:317(:ACA:ESP:V1)#part2-para3</span></li>
+	<li><span class="example">ECLI:NL:RBDHA:2015:14337(:SPR:ENG:V1)</span></li>
+</ul>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+					<div class="col-md-5 right">
+						<div class="panel-group spaceOver" id="rightAccordion">
+						  <div class="panel panel-default" id="Panel-Out">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								  ECLI
+							  </h4>
+							</div>
+							 <div id="collapseOutput">
+							  <div class="panel-body">
+								<div id="ecli"></div>
+							  </div>
+							</div>
+						 </div>
+						  <div class="panel panel-default" id="Panel-Features">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#rightAccordion" href="#collapse-output">
+								   Generated features 
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-output" class="panel-collapse collapse">
+							  <div class="panel-body">
+								<pre id="output"></pre>
+							  </div>
+							</div>
+						  </div>
+						  <div class="panel panel-default" id="Panel-LCM">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#rightAccordion" href="#collapse-outputlcm">
+								   Generated features in JSON-LD data format
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-outputlcm" class="panel-collapse collapse">
+							  <div class="panel-body">
+								<pre id="output-lcm"></pre>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div id="push"></div>
+		</div>
+		<div class="footer">
+			<div class="container">
+				<p class="muted credit">
+					&copy; 2017 Fabio Vitali, University of Bologna &middot;
+				</p>
+			</div>
+		</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="About Akoma Ntoso URI examples" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">About the BOECLI playground</h4>
+		</div>
+		<div class="modal-body">
+<p>Some info about the BOECLI playground</p>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+<div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="Help" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">Help</h4>
+		</div>
+		<div class="modal-body">
+HELP!!!
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+
+
+</body>
+</html>

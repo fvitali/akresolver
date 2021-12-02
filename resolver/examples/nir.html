@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<!--
+NIR 2 AKN converter - examples 
+by Fabio Vitali
+This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0/).
+You are free to:
+* Share - copy and redistribute the material in any medium or format
+* Adapt - remix, transform, and build upon the material
+for any purpose, even commercially.
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+Under the following terms:
+* Attribution - You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+-->
+<html>
+	<head>
+		<title>Convertitore nir->akn</title>
+		<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css" rel="stylesheet">
+		<link href="base.css" rel="stylesheet">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.js"> </script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+		<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-0.10.0.js"></script>
+		<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+		<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"> </script>
+		<script> 
+			$(document).ready(main);
+
+			function main() {
+				$('.right').height($(document).height() - (30 +  $('.navbar').height() + $('.footer').height()))
+				$('.left').height($(document).height() - (30 + $('.navbar').height() + $('.footer').height()))
+			}
+		</script>
+		<script>
+			$(document).ready(function() {
+				$('.item').each(function(i,el) {
+					var uri = el.textContent ;
+					$(el).html('<span class="example">'+uri+'<span>  <a target="AKNconvert" title="open this URI in a new window" href="../util/nir2akn.php?nir='+uri+'&as=xml&debug" class="glyphicon glyphicon-new-window" aria-hidden="true"></span>')
+				}) ;
+//				fixWindowSize() ;
+			});
+			$(document).unbind("keyup").keyup(function(e){ 
+				var code = e.which; // recommended to use e.which, it's normalized across browsers
+				if(code==13) {
+					$("#start").click();
+				}
+			});
+			$(document).on('click','.example',function(){
+				$('#input').val(this.textContent.trim())
+				convert(this.textContent.trim()); 
+			});
+			$(document).on('click','#start',function(){
+				convert($('#input').val().trim()); 
+			});
+			
+			function convert(url) {
+				if (url!='') {
+					url = encodeURIComponent(url) ;
+					$.ajax({
+						method: 'GET',
+						url: "../util/nir2akn.php?nir="+url+"&as=json&debug&timestamp="+(1*new Date()),
+						success: function(d) {
+							if (d.akn) {
+								$('#out').html(d.akn) ;
+							} else if (d.error) {
+								$('#out').html(d.error) ;							
+							} else {
+								$('#out').html("error unknown") ;														
+							}
+							$('#parse').html(JSON.stringify(d.parse,null,2)) ;
+							$('#features').html(JSON.stringify(d.features,null,2)) ;
+						},
+						error: function(a,b,c) {
+							$('#out').html(a.responseText) ;
+							$('#parse').html("") ;
+							$('#features').html("") ;
+							
+						}
+					})
+				} else {
+					$('#out').html('') ;
+				}				
+			}
+		</script>
+		<style type="text/css">
+		
+			h5 {
+				font-style: italic;
+			}
+			.example {
+				cursor: pointer; 
+				cursor: hand;
+				text-decoration: underline; 
+				color: blue; 
+			}
+
+			#start {
+				margin-top: 5px; 
+			}			
+			li {
+				font-size: 110% ; 
+			}
+			
+			.incorrect {
+				font-size: 90%; 
+				color: red; 
+			}
+			.correction {
+				font-size: 90%; 
+				color: green; 
+			}
+		</style>
+	</head>
+<body>
+		<div class="wrap">
+			<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" 
+								data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">Convertitore nir->akn</a>
+					</div>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+						<li><a href="#" role="button" data-toggle="modal" data-target="#about">Info</a></li>
+						<li><a href="#" role="button" data-toggle="modal" data-target="#help">Aiuto</a></li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+
+			<div class="container body">
+				<div class="row clearfix">
+					<div class="col-md-7 left">
+						<div class="panel-group spaceOver" id="leftAccordion">
+						  <div class="panel panel-default" id="Panel-Intro">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+Conversione di urn:nir in Akoma Ntoso
+							  </h4>
+							</div>
+							<div id="collapsePrefixes">
+							  <div class="panel-body">
+<p>Questa piccola interfaccia utilizza il servizio nir2akn per convertire URN secondo la sintassi 
+Norme in Rete nella sintassi della Naming Convention di Akoma Ntoso</p> 		
+<p><textarea id="input" autofocus cols="70" rows="3" 
+	placeholder="Inserisci un URN Norme In rete (inizia con urn:nir:... )"
+>urn:nir:ministero.giustizia:decreto.legge:2000-07-09;123</textarea>
+<button id="start" type="button">Converti</button></p>
+							  </div>
+							</div>
+						  </div>
+						  <div class="panel panel-default" id="Panel-urisyntax">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-urisyntax">
+Sintassi degli URN NIR
+								</a>
+							  </h4>
+							</div>
+							 <div id="collapse-urisyntax" class="panel-collapse collapse">
+							  <div class="panel-body">
+<h5>Aspetti generali</h5>
+<pre>
+DP: ':'
+PV: ';'
+V : ','
+PLUS: '+'
+
+date: data (V data)*
+periodo: token
+numeri: 'nir-' numero+ | token</pre>
+
+<h5>L'espressione principale</h5>
+<pre>
+expr: :schema :documento :versione? :comunicato? :manifestazione? 
+      :partizione? :proprieta?
+schema: "urn:nir:"</pre>		
+
+<h5>La parte <i>documento</i></h5>
+<pre>
+documento: :autorita DP :provvedimento (DP :estremi (DP :annesso)*)?
+
+autorita: :soggetto (PLUS :soggetto)*
+soggetto: elemento:token (PV elemento:token)*
+provvedimento: tipo:token ( PV spec:token)*
+estremi: (:date | :periodo) (PV :numeri (V :numeri)*) ?
+annesso: id:token (PV spec:token)*</pre>		
+
+<h5>Le parti <i>versione</i> e <i>comunicato</i></h5>
+<pre>
+versione: '@' (:data | spec:token) ( PV (vigenza:data | spec:token))?
+comunicato: '*' tipo:token PV :data
+</pre>		
+
+<h5>La parte <i>manifestazione</i></h5>
+<pre>
+manifestazione: '$' formato:(formato:token (PV spec:token)*) editore:(DP nome:editore (PV spec:token)*) (componente:(DP nome:token (PV spec:token)*))? </pre>		
+
+<h5>Le parti <i>partizione</i> e <i>proprietà</i></h5>
+<pre>
+partizione: '~' id:token
+proprieta: '!' ( 'vig=' vigore:data | 'eff=' efficacia:data)</pre>
+
+							  </div>
+							</div>
+						  </div>
+						  <div class="panel panel-default" id="Panel-examples">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#leftAccordion" href="#collapse-examples">
+								  Alcuni esempi 
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-examples" class="panel-collapse collapse">
+							  <div class="panel-body">
+<ul>
+	<li><span class="item">urn:nir:stato:legge:2000-04-03;56</span> - esempio base (1)</li>
+	<li><span class="item">urn:nir:ministero.giustizia+ministero.finanze:disegno.legge:2000-07-09;123</span> in 10.2</li>
+	<li><span class="item">urn:nir:ministero.finanze;dipartimento.entrate;dirigente:decreto:2000-07-09;123</span> in 10.3</li>
+	<li><span class="item">urn:nir:regione.lazio:legge:2000-04-03;56</span> in 10.4</li>
+	<li><span class="item">urn:nir:stato:legge;bassanini:2000-04-03;56</span> in 11.2</li>
+	<li><span class="item">urn:nir:stato:decreto.legislativo:1992-07-24;358</span> in 11.3</li>
+	<li><span class="item">urn:nir:stato:testo.unico;appalti.pubblici:1992-07-24;358</span> in 11.3</li>
+	<li><span class="item">urn:nir:garante.protezione.dati.personali:provvedimento:1999-12-30,2000-01-13;1-p-2000</span> in 12.2</li>
+	<li><span class="item">urn:nir:ministero.finanze:decreto:1999-12-20;nir-3</span> in 12.3</li>
+	<li><span class="item">urn:nir:regione.lazio:legge:2000-06-12;c-10-97,c-11-97,c-12-97 </span> in 12.4</li>
+	<li><span class="item">urn:nir:regione.umbria;giunta:delibera:1998-02-12;14:allegato.a;confini.parco</span> in 13.1</li>
+	<li><span class="item">urn:nir:regione.umbria;giunta:delibera:1998-02-12;14:allegato.a;confini.parco:tabella.1;territori.comuni </span> in 13.3</li>
+	<li><span class="item">urn:nir:stato:regio.decreto:1941-01-30;12@1998-02-19</span> in 14.2</li>
+
+	<li class="item">urn:nir:stato:legge:2000-04-03;56*errata.corrige;2000-09-10$pdf;1.7:senato.repubblica:tabella.1</li>
+	<li class="item">urn:nir:stato:legge:2000-04-03;56*avviso.rettifica;2003-06-05*errata.corrige;2003-06-07$pdf;1.7:istituto.poligrafico.zecca.stato;guritel</li>
+	<li class="item">urn:nir:stato:legge:2000-04-03;56$xml;nir-2.2:senato.repubblica</li>
+	<li class="item">urn:nir:stato:legge:2000-04-03;56$pdf;1.7:senato.repubblica:tabella.1~art1!eff=2005-02-01</li>
+	<li class="item">urn:nir:stato:legge:2000-07-09;123~art2-com3!vig=2003-01-01</li>
+	<li class="item">urn:nir:stato:testo.unico;appalti.pubblici:1992-07-24;358</li>
+</ul>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+					<div class="col-md-5 right">
+						<div class="panel-group spaceOver" id="rightAccordion">
+						  <div class="panel panel-default" id="Panel-Out">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								  Output
+							  </h4>
+							</div>
+							 <div id="collapseOutput">
+							  <div class="panel-body">
+								<pre id="out"></pre>
+							  </div>
+							</div>
+						 </div>
+						  <div class="panel panel-default" id="Panel-Parse">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#rightAccordion" href="#collapse-parse">
+								  Risultato del parsing URN NIR 
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-parse" class="panel-collapse collapse">
+							  <div class="panel-body">
+								<pre id="parse"></pre>
+							  </div>
+							</div>
+						  </div>
+						  <div class="panel panel-default" id="Panel-Features">
+							<div class="panel-heading">
+							  <h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#rightAccordion" href="#collapse-features">
+								  Features Akoma Ntoso riconosciute 
+								</a>
+							  </h4>
+							</div>
+							<div id="collapse-features" class="panel-collapse collapse">
+							  <div class="panel-body">
+								<pre id="features"></pre>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div id="push"></div>
+		</div>
+		<div class="footer">
+			<div class="container">
+				<p class="muted credit">
+					&copy; 2015 Fabio Vitali, University of Bologna &middot;
+				</p>
+			</div>
+		</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="About Akoma Ntoso URI examples" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">Info sul convertitore nir->akn</h4>
+		</div>
+		<div class="modal-body">
+<p>Info sul convertitore nir->akn</p>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+<div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="Help" aria-hidden="true">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="modal-title" id="myModalLabel">Aiuto</h4>
+		</div>
+		<div class="modal-body">
+AIUTO!!!
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		</div>
+	</div>
+	</div>
+</div>
+
+
+
+</body>
+</html>

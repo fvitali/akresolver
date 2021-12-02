@@ -1,0 +1,295 @@
+.page-header {
+	margin-top: -60px; 
+	padding-top: 80px; 
+}
+
+.nocounter:before {
+	content : ""; 
+}
+
+.syntax {
+	cursor: help; 
+}
+
+.popover h3:before{
+	content : ""; 
+}
+
+.popover {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.popover h3 {
+	font-weight: bold; 
+}
+
+.optional {
+	color: #7777ff ;
+	font-style: italic; 
+}
+.optional:before {
+	content: '['; 
+	font-weight: bold ;
+	color: #0000FF ;
+}
+.optional:after {
+	content: ']'; 
+	font-weight: bold ;
+	color: #0000FF ;
+}
+body {
+    counter-reset: figure;      /* Create a figure counter scope */
+}
+.content {
+    counter-reset: chapter;      /* Create a chapter counter scope */
+}
+
+h1:before {
+    content: counter(chapter) ". ";
+    counter-increment: chapter;  /* Add 1 to chapter */
+}
+.jumbotron h1 {
+    font-size : 250% ;
+    counter-reset: section;      /* Set section to 0 */
+}
+
+h1 {
+    font-size : 180% ;
+    counter-reset: section;      /* Set section to 0 */
+}
+h2:before {
+    content: counter(chapter) "." counter(section) " ";
+    counter-increment: section;
+}
+h2 {
+    font-size : 150% ;
+    counter-reset: subsection;      /* Set section to 0 */
+}
+h3:before {
+    content: counter(chapter) "." counter(section) "." counter(subsection) " ";
+    counter-increment: subsection;
+}
+h3 {
+    font-size : 120% ;
+}
+figcaption:before {
+    content: 'fig.' counter(figure) ': ' ;
+    counter-increment: figure;
+}
+figcaption {
+	text-align: center;
+	font-size: 90% ;
+	font-style: italic;
+}
+
+.example {
+	display: pre;
+	font-family: 'Courier new'; 
+}
+
+#toolbar {
+	z-index: 100; 
+	margin: 0 ; 
+}
+
+#iframe { overflow: hidden;} /*this is to remove the scroll when not needed*/
+
+#iframe, iframe {
+	z-index: 1 ;
+	width: 100%;
+	height: 100%;
+}
+
+.navbar-brand {
+	padding-left: 50px; 
+	background-image: url("/akn/admin/an-2.gif") ;
+	background-repeat:no-repeat;
+	background-position:left top;
+
+}
+
+
+.marginTop {
+	margin-top: 70px; 
+}
+
+.navbar-brand {
+	padding-left: 50px; 
+	background-image: url("an-2.gif") ;
+	background-repeat:no-repeat;
+	background-position:left top;
+
+}
+
+.veryWide {
+	width: 250%;
+}
+
+.larger {
+	font-size: 120%;
+}
+
+label {
+	display: table-row !important;
+}
+.block-help {
+	font-style: italic; 
+	font-size: 90% ;
+	display: table-row !important;
+}
+
+.smaller {
+	font-style: italic; 
+	font-size: 90% ;
+}
+
+div.input-group {	
+	margin-top: 15px; 
+	width: 100%;
+}
+
+.btn {
+	margin: 5px; 
+}
+
+
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+/* By default it's not affixed in mobile views, so undo that */
+.bs-docs-sidebar.affix {
+  position: static;
+}
+@media (min-width: 768px) {
+  .bs-docs-sidebar {
+    padding-left: 20px;
+  }
+}
+
+/* First level of nav */
+.bs-docs-sidenav {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #999;
+  padding: 4px 20px;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+  padding-left: 19px;
+  color: #563d7c;
+  text-decoration: none;
+  background-color: transparent;
+  border-left: 1px solid #563d7c;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+  padding-left: 18px;
+  font-weight: bold;
+  color: #563d7c;
+  background-color: transparent;
+  border-left: 2px solid #563d7c;
+}
+
+.bs-docs-sidebar .nav > li.H2 > a {
+  padding-top:    1px;
+  padding-bottom: 1px;
+  padding-left: 35px;
+  font-size: 12px;
+  font-weight: normal;
+}
+.bs-docs-sidebar .nav > li.H2 > a:hover,
+.bs-docs-sidebar .nav > li.H2 > a:focus {
+  padding-left: 36px;
+}
+.bs-docs-sidebar .nav > li.H2.active > a,
+.bs-docs-sidebar .nav > li.H2.active:hover > a,
+.bs-docs-sidebar .nav > li.H2.active:focus > a {
+  font-weight: 500;
+  padding-left: 35px;
+}
+
+.bs-docs-sidebar .nav > li.H3 > a {
+  padding-top:    0px;
+  padding-bottom: 0px;
+  padding-left: 45px;
+  font-size: 11px;
+  font-weight: normal;
+}
+.bs-docs-sidebar .nav > li.H3 > a:hover,
+.bs-docs-sidebar .nav > li.H3 > a:focus {
+  padding-left: 46px;
+}
+.bs-docs-sidebar .nav > li.H3.active > a,
+.bs-docs-sidebar .nav > li.H3.active:hover > a,
+.bs-docs-sidebar .nav > li.H3.active:focus > a {
+  font-weight: 500;
+  padding-left: 45px;
+}
+
+/* Back to top (hidden on mobile) */
+.back-to-top {
+  display: none;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #999;
+}
+.back-to-top:hover {
+  text-decoration: none;
+  color: #563d7c;
+}
+
+@media (min-width: 768px) {
+  .back-to-top {
+    display: block;
+  }
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+  .bs-docs-sidebar .nav > .active > ul {
+    display: block;
+  }
+  /* Widen the fixed sidebar */
+  .bs-docs-sidebar.affix,
+  .bs-docs-sidebar.affix-bottom {
+    width: 213px;
+  }
+  .bs-docs-sidebar.affix-top {
+    position: fixed; /* Undo the static from mobile first approach */
+    top: 80px;
+  }
+  .bs-docs-sidebar.affix {
+    position: fixed; /* Undo the static from mobile first approach */
+    top: 100px;
+  }
+  .bs-docs-sidebar.affix-bottom {
+    position: absolute; /* Undo the static from mobile first approach */
+  }
+  .bs-docs-sidebar.affix-bottom .bs-docs-sidenav,
+  .bs-docs-sidebar.affix .bs-docs-sidenav {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 1200px) {
+  /* Widen the fixed sidebar again */
+  .bs-docs-sidebar.affix-bottom,
+  .bs-docs-sidebar.affix {
+    width: 263px;
+  }
+}

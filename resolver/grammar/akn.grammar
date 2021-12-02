@@ -1,0 +1,97 @@
+﻿SL: '/'
+number: /[0-9]+/
+number2: /[0-9]{2}/
+number4: /[0-9]{4}/
+chars: /[a-zA-Z_]+/
+any: /.+/
+token: chars (number | chars)*
+string: (number | chars)+
+
+dashHier: dashRecur 
+	function dashRecur (&$res, $sub) {
+		if (count($sub['item'])>1) 
+			array_unshift($sub['item'],$sub['text']);
+		$res['item'] = $sub['item'];
+	}
+	
+dashRecur: item:string '-' a:dashRecur | c:string
+	function c (&$res, $sub) {
+		$res['item'] = array($sub);
+	}
+	function a (&$res, $sub) {
+		array_unshift($sub['item'],$res['item']);
+		$res['item'] = $sub['item'];
+	}
+
+slashHier: slashRecur 
+	function slashRecur (&$res, $sub) {
+		if (count($sub['item'])>1) 
+			array_unshift($sub['item'],$sub['text']);
+		$res['item'] = $sub['item'];
+	}
+	
+slashRecur: item:string SL a:slashRecur | c:string
+	function c (&$res, $sub) {
+		$res['item'] = array($sub);
+	}
+	function a (&$res, $sub) {
+		array_unshift($sub['item'],$res['item']);
+		$res['item'] = $sub['item'];
+	}
+
+date: dateElements | stringDate
+	function dateElements (&$res, $sub) {
+		$res = $sub;
+		$res['string'] = $res['text'] ; 
+	}
+
+dateElements: year:number4 '-' month:number2 '-' day:number2 !number | year:number4 '-' month:number2 !number | year:number4
+
+stringDate: year:chars '-' month:chars '-' day:chars
+
+expr: > :uri > extra:any? > | extra:any
+uri: scheme? work expression manifestation? component? fragment? format | scheme? work expression? component? fragment? 
+	function * (&$res, $sub) {
+		if (!isset($res['parts'])) $res['parts'] = array() ;
+		$res['parts'] =array_merge($res['parts'],$sub) ;
+	}
+
+scheme: SL? 'akn'
+work: SL?
+	jurisdiction:dashHier SL 
+	worktype:token SL 
+	((worksubtype:dashHier SL workactor:dashHier SL workDate:date SL workNumber: dashHier) |
+	(worksubtype:dashHier SL workDate:date SL workNumber: dashHier) |
+	(workDate:date SL workNumber: dashHier))
+
+expression: 
+	SL lang:dashHier 
+	( 
+		'@' (versDate:date '-' versPhase:string | versDate:date | versPhase:string | today:"") | 
+		':' (viewRange:range | viewDate:date | today:"") 
+	)(
+		(SL exprSource:token)? 
+		SL exprDate:date
+	)?
+	function today( &$res, $sub ) { $res['date'] = 'TODAY' ;}
+	
+manifestation: 
+	SL manifSource:token 
+	(SL manifDate:date)? 
+
+format: '.' format:token
+		function format( &$res, $sub ) { $res['format'] = array($sub) ;}
+
+component: '!' component:slashHier
+
+fragment: '~' fragment:string
+
+
+version: date:date '-' phase:string | date:date | phase:string | today:""
+		function today( &$res, $sub ) { $res['date'] = 'TODAY' ;}
+
+
+view: range:range | date:date | today:""
+		function today( &$res, $sub ) { $res['date'] = 'TODAY' ;}
+
+range: from:date '-' to:date 

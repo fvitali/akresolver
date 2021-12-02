@@ -1,0 +1,231 @@
+<div class="modal fade" id="pref" tabindex="-1" role="dialog" aria-labelledby="preferences" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Preferences</h4>
+			</div>
+			<div class="modal-body big">
+				<form role="form" ng-controller="prefsController">
+					<div>
+						These preferences will be used for features that are not specified in the request URI. 
+						More details can be found in the <a href="help.html">documentation</a>.
+					</div>
+					<div class="form-group">
+						<label for="action">Default action</label>
+						<select class="form-control" id="action" ng-model='prefs.action' ng-options='u.action as (u.action | explainAction) for u in actions' > </select>
+					</div>
+					<div class="form-group">
+						<label for="lang">Preferred Language</label>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox">Browser settings ({{navigator.languages}}) or
+							</label>
+						</div>
+						<select multiple class="form-control" id="lang" ng-model='p.lang3'
+							ng-options='l as (l| explainLanguage) for l in languages.indexBy(true,"skip",true)' ></select>
+						<div class='block-help' ng-switch on="p.lang3">
+							<div ng-switch-when="non">All documents will be shown in their original language.</div>
+							<div ng-switch-when="mul">All documents will be shown in multiple languages.</div>
+							<div ng-switch-when="brw">All documents will be shown in the language set by the browser's preferences.</div>
+							<div ng-switch-default>All documents will be shown in {{languages.indexBy(p.lang3,'lang3')[0].eng}}, if a translation is available.</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="viewdate">View date</label>
+						<toggle model="toggle" values="toggleValues"></toggle>
+						<div class="col col-md-6">
+							<p class="input-group">
+								<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="p.showDate" is-open="open1" show-weeks='false' ng-required="true" close-text="Close" />
+								<span class="input-group-btn">
+									<button class="btn btn-default" ng-click="open($event,1)"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</p>
+						</div>
+						<div class="col col-md-6">
+							<p class="input-group">
+								<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="p.endShowDate" is-open="open2" show-weeks='false' ng-required="true" close-text="Close" />
+								<span class="input-group-btn inline">
+									<button class="btn btn-default" ng-click="open($event,2)"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</p>
+						</div>
+						<div class='block-help' ng-if="!p.endShowDate">All documents will be shown in the version closest to {{p.showDate  |date:format}} 
+						{{(p.showDate.toDateString()===today.toDateString() ?'(today)':'')}}, provided that multiple versions are available.</div>
+						<div class='block-help' ng-if="p.endShowDate">All documents will be selected in all versions in force between {{p.showDate  |date:format}} 
+						{{(p.showDate.toDateString()===today.toDateString() ?'(today)':'')}} and {{p.endShowDate  |date:format}} 
+						{{(p.endShowDate.toDateString()===today.toDateString() ?'(today)':'')}}, provided that multiple versions are available.</div>
+					</div>
+					<div class="form-group">
+						<label for="lang">Preferred format</label>
+						<select class="form-control" id="format" ng-model='p.format'>
+							<option value=''>No prefs</option>
+							<option value='xml'>XML</option>
+							<option value='pdf'>PDF</option>
+							<option value='html'>HTML</option>
+						</select>
+						<div class='block-help' ng-if="p.format">All documents will be shown in {{p.format | uppercase}}, if available.</div>
+						<div class='block-help' ng-if="!p.format">All documents will be shown in any available format.</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn spaced" ng-click="reset()">Cancel</button>
+				<button type="button" class="btn btn-primary" ng-click="save()">Save preferences</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+var actions = [
+{ action: 'resolve', info: 'Returns a JSON structure of the resolved request.'}, 
+{ action: 'redirect', info: 'Redirects the browser to the requested document.'}, 
+{ action: 'frame', info: 'Frames the requested document with a navigation menu.', default:true}
+]	 
+
+frameApp.controller('prefsController', ['prefs','$scope', '$http', '$filter', function(prefs, $scope, $http,$filter) {
+$scope.actions = actions
+$scope.prefs = prefs.values
+$scope.format = 'yyyy-MM-dd';
+$http.get(pathBase+'/admin/data/languages.json').success(function(data) {
+	$scope.languages = data;
+});
+
+$scope.toggleValues =["Single date", "Date range"] ; 
+$scope.toggle = $scope.toggleValues[0]
+
+
+$scope.f = theFeatures
+
+var p = $.extend(true, {}, theFeatures.prefs) ;
+$scope.today = new Date()
+if (p.viewDate=='today') {
+	p.showDate=$scope.today ;
+} else {
+	p.showDate = new Date().parse(p.viewDate,$scope.format.toUpperCase())
+}
+if (p.endViewDate) {
+	p.endShowDate=p.endViewDate ;
+}
+$scope.p = p
+$scope.open = function($event,n) {
+	$event.preventDefault();
+	$event.stopPropagation();
+	if (n==1) $scope.open1 = true;
+	if (n==2) $scope.open2 = true;
+};
+$scope.save = function() {
+	var goOn = confirm("Save preferences?")
+	if (goOn) {
+		if ($scope.p.showDate.toDateString()==$scope.today.toDateString()) {
+			p.viewDate='today' ;
+		} else {
+			p.viewDate = p.showDate.toString($scope.format.toUpperCase())
+		}
+		if (p.endShowwDate)
+			 p.endViewDate = p.endShowDate.toString($scope.format.toUpperCase())
+		
+		$.post( "/admin/savePrefs.php", $scope.p, function(data) {
+			window.location.reload(true)
+		})
+	}
+}
+$scope.reset = function() {
+	$scope.p = $.extend(true, {}, theFeatures.prefs) ;
+	$('#pref').modal('hide')
+}
+}]);
+
+frameApp.service('prefs', ['$cookies', function($cookies) {
+this.values = $cookies.getObject('AKNPrefs')
+if (this.values == undefined) {
+	this.values = {
+		action: 'frame',
+		lang: navigator.languages,
+		view: {from: new Date(), to: new Date()},
+		format: 'XML'
+	}
+}
+this.save = function() {
+	$cookies.putObject(this.values) ;
+}
+}]);
+
+frameApp.filter('explainAction', function() {
+return function (action) {
+	var exp = actions.indexBy(action,'action')[0].info
+	return action + ' -- ' + exp; 
+}
+})
+
+frameApp.filter('explainLanguage', function() {
+return function (l) {
+	return l.lang3+" - "+l.eng+(l.native?" ("+l.native+")":"")
+}
+})
+
+frameApp.directive('toggle', function($interpolate) {
+	var tplHideLeft ='"!{{m}} || {{m}}=={{l}}[1]"'
+	var tplHideRight ='"{{m}}=={{l}}[0]"'
+	var tplClick ='"({{m}}=({{m}}=={{l}}[0]?{{l}}[1]:{{l}}[0]))"'
+
+	return {
+		restrict: 'E',
+		template: function(elem, attr) {
+			var data = {m:attr['model'],l:attr['values']}
+			var ngHideLeft  = $interpolate(tplHideLeft)(data)
+			var ngHideRight  = $interpolate(tplHideRight)(data)
+			var ngClick = $interpolate(tplClick)(data)
+			
+			var tpl = [
+			'<link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />',
+			'<span class="toggle">{{' + attr['values'] + '[0]}} ',
+			' <i class="fa fa-toggle-on fa-rotate-180" style="font-size:140%;cursor:pointer; vertical-align:middle;" ng-hide='+ ngHideLeft + ' ng-click=' + ngClick + '></i>',
+			' <i class="fa fa-toggle-on" style="font-size:140%;cursor:pointer; vertical-align:middle;" ng-hide='+ ngHideRight + ' ng-click=' + ngClick + '></i> ',
+			'{{'+attr['values']+'[1]}}</span>'
+			].join("\n");
+			return tpl ;
+		}
+	};
+})
+
+
+
+var oldCookiesMgr = (function() {
+var today = new Date();
+var expiry = new Date(today.getTime() + 30 * 86400 * 1000);   // plus 30 days
+var expires = "; expires=" + expiry.toGMTString() ;
+var maxExpires = "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" ; 
+var path = "; path=/" ;
+
+return {
+	get: function (k) {
+		var y = encodeURIComponent(k).replace(/[\-\.\+\*]/g, "\\$&")
+		var x = document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + y + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")
+		var z = decodeURIComponent(x)
+		try{
+			return JSON.parse(z);
+		} catch(e){
+			return z;
+		}
+		return null;
+	},
+	set: function (k, v) {
+		if (typeof v !== 'string')
+			v = JSON.stringify(v) ;
+		document.cookie = encodeURIComponent(k) + "=" + encodeURIComponent(v) + expires + path;
+	},
+	remove: function (k) {
+		document.cookie = encodeURIComponent(k) + maxExpires +  path;
+	},
+	keys: function () {
+		var k = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+		for (i = 0; i < k.length; i++) { 
+			k[i] = decodeURIComponent(k[i]) 
+		}
+		return k;
+	}
+};
+})() ;
+
+</script>

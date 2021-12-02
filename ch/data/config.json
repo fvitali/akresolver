@@ -1,0 +1,74 @@
+[
+	{
+		"sort":"9",
+		"IRI":"ch/act/as/(.*)/ita",
+		"URL":"http://www.admin.ch/opc/it/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@"
+	},
+	{
+		"sort":"8",
+		"IRI":"ch/act/ro/(.*)",
+		"URL":"http://www.admin.ch/opc/{lang_lang2}/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"10",
+		"IRI":"ch/act/as/(.*)/fra",
+		"URL":"http://www.admin.ch/opc/fr/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"11",
+		"IRI":"ch/act/as/(.*)/deu",
+		"URL":"http://www.admin.ch/opc/de/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"12",
+		"IRI":"ch/act/as/(.*)",
+		"URL":"http://www.admin.ch/opc/{lang_lang2}/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"7",   
+		"IRI":"ch/act/ro/(.*)/deu",
+		"URL":"http://www.admin.ch/opc/de/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"6",
+		"IRI":"ch/act/ro/(.*)/fra",
+		"URL":"http://www.admin.ch/opc/fr/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"2",
+		"IRI":"ch/act/ru/(.*)/fra@",
+		"URL":"http://www.admin.ch/opc/fr/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},    
+	{
+		"sort":"3",
+		"IRI":"ch/act/ru/(.*)/deu",
+		"URL":"http://www.admin.ch/opc/de/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"4",
+		"IRI":"ch/act/ru/(.*)",
+		"URL":"http://www.admin.ch/opc/{lang_lang2}/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@, /akn/ch/act/ru/{workDate_year}/{workNumber_0}/ita@"
+	},
+	{
+		"sort":"5",
+		"IRI":"ch/act/ro/(.*)/ita",
+		"URL":"http://www.admin.ch/opc/it/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@"
+	},
+	{
+		"sort":"1",
+		"IRI":"ch/act/ru/(.*)/ita",
+		"URL":"http://www.admin.ch/opc/it/official-compilation/{workDate_year}/{workNumber_0}.{format_prefix}",
+		"Suggest":"/akn/ch/act/ro/{workDate_year}/{workNumber_0}/fra@, /akn/ch/act/as/{workDate_year}/{workNumber_0}/deu@"
+	}
+]

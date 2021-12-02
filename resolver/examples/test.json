@@ -1,0 +1,24 @@
+{
+  "legal-reference": [
+    {
+      "text": "sent. Cost. n. 57/2013",
+      "provenance": "BOECLI eu.boecli.service.recognition.impl.DefaultCaseLawReferenceRecognition \"Generic reference recognition to case-law\" by ITTIG (v. 0.1) for language DEFAULT and jurisdiction DEFAULT in extension Default Extension",
+      "is-case-law-reference": true,
+      "is-legal-reference": false,
+      "legal-identifier": [
+        {
+          "type": "ecli",
+          "code": "ECLI:IT:COST:2013:57",
+          "url": "https://e-justice.europa.eu/ecli/ECLI:IT:COST:2013:57",
+          "provenance": "BOECLI it.cnr.ittig.boecli.impl.generation.EcliGeneration \"Italian ECLI Generation Service\" by ITTIG (v. 0.3) for language IT and jurisdiction IT in extension Italian Extension"
+        }
+      ],
+      "features": {
+        "authority": "IT_COST",
+        "type": "JUDGMENT",
+        "year": "2013",
+        "number": "57"
+      }
+    }
+  ]
+}
