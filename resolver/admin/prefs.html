@@ -1,4 +1,5 @@
 <div class="modal fade" id="pref" tabindex="-1" role="dialog" aria-labelledby="preferences" aria-hidden="true">
+<form role="form" ng-controller="prefsController">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -6,7 +7,7 @@
 				<h4 class="modal-title">Preferences</h4>
 			</div>
 			<div class="modal-body big">
-				<form role="form" ng-controller="prefsController">
+				
 					<div>
 						These preferences will be used for features that are not specified in the request URI. 
 						More details can be found in the <a href="help.html">documentation</a>.
@@ -67,14 +68,15 @@
 						<div class='block-help' ng-if="p.format">All documents will be shown in {{p.format | uppercase}}, if available.</div>
 						<div class='block-help' ng-if="!p.format">All documents will be shown in any available format.</div>
 					</div>
-				</form>
+				
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn spaced" ng-click="reset()">Cancel</button>
+				<button type="button" class="btn spaced" ng-click="reset()" >Cancel</button>
 				<button type="button" class="btn btn-primary" ng-click="save()">Save preferences</button>
 			</div>
 		</div>
 	</div>
+</form>
 </div>
 <script>
 var actions = [

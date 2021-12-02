@@ -1,4 +1,5 @@
-﻿<?PHP
+<?PHP
+
 use hafriedlander\Peg\Compiler;
 
 function parse($scheme,$uri,$base='.',$force=false) {

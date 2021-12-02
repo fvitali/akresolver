@@ -1,4 +1,4 @@
-﻿<?PHP 
+<?PHP 
 require "admin/util.php" ;
 require "admin/tpl2.php" ;
 
