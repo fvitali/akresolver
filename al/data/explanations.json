@@ -1,0 +1,54 @@
+[
+	{
+		"term":"fre",
+		"explanation":"French"
+	},
+	{
+		"term":"deu",
+		"explanation":"German"
+	},
+	{
+		"term":"fra",
+		"explanation":"French"
+	},
+	{
+		"term":"ger",
+		"explanation":"German"
+	},
+	{
+		"term":"opc",
+		"explanation":"Official Publication Center "
+	},
+	{
+		"term":"ita",
+		"explanation":"Italian"
+	},
+	{
+		"term":"ch",
+		"explanation":"Switzerland"
+	},
+	{
+		"term":"as",
+		"explanation":"'amtliche Sammlung' (German) or 'raccolta ufficiale' (Italian) or 'recueil officiel' (French)"
+	},
+	{
+		"term":"ru",
+		"explanation":"'raccolta ufficiale' (Italian) or 'recueil officiel' (French) or 'amtliche Sammlung' (German)"
+	},
+	{
+		"term":"ro",
+		"explanation":"'recueil officiel' (French) or 'raccolta ufficiale' (italian) or 'amtliche Sammlung' (German)"
+	},
+	{
+		"term":"rs",
+		"explanation":"'recueil systu00e9matique' (French) or 'raccolta sistematica' (italian) or 'systematische Rechtssammlung' (German)"
+	},
+	{
+		"term":"sr",
+		"explanation":"'systematische Rechtssammlung' (German) or 'recueil systu00e9matique' (French) or 'raccolta sistematica' (italian)"
+	},
+	{
+		"term":"act",
+		"explanation":"Enacted legislation"
+	}
+]
